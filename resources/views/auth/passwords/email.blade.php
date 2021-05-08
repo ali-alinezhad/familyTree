@@ -1,47 +1,69 @@
-@extends('layouts.app')
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
 
-@section('content')
+    <title>Send Reset Password Link | {{ config('app.name') }}</title>
+    <meta name="description" content="CoreUI Template - InfyOm Laravel Generator">
+    <meta name="keyword" content="CoreUI,Bootstrap,Admin,Template,InfyOm,Open,Source,jQuery,CSS,HTML,RWD,Dashboard">
+
+    <!-- CoreUI CSS -->
+    <link rel="stylesheet" href="{{ mix('css/app.css') }}" crossorigin="anonymous">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css"
+          integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog=="
+          crossorigin="anonymous"/>
+</head>
+<body class="c-app flex-row align-items-center">
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Reset Password') }}</div>
-
-                <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-
-                    <form method="POST" action="{{ route('password.email') }}">
-                        @csrf
-
-                        <div class="form-group row">
-                            <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
-
-                                @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
+        <div class="col-md-6">
+            <div class="card-group">
+                <div class="card p-4">
+                    <div class="card-body">
+                        @if (session('status'))
+                            <div class="alert alert-success">
+                                {{ session('status') }}
+                            </div>
+                        @endif
+                        <form method="post" action="{{ url('/password/email') }}">
+                            @csrf
+                            <h1>Reset Your Password</h1>
+                            <p class="text-muted">Enter Email to reset password</p>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        <i class="cil-envelope-open"></i>
                                     </span>
+                                </div>
+                                <input type="email"
+                                       class="form-control @error('email') is-invalid @enderror" name="email"
+                                       value="{{ old('email') }}" placeholder="Email">
+                                @error('email')
+                                <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
-                        </div>
 
-                        <div class="form-group row mb-0">
-                            <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Send Password Reset Link') }}
-                                </button>
+                            <div class="row">
+                                <div class="col-12">
+                                    <button class="btn btn-block btn-primary" type="submit">
+                                        <i class="fa fa-btn fa-envelope"></i> Send Password Reset Link
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-@endsection
+
+<!-- CoreUI -->
+<script src="{{ mix('js/app.js') }}" defer></script>
+
+</body>
+</html>
