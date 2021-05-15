@@ -1,3 +1,4 @@
+@php $locale = session()->get('locale'); @endphp
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
@@ -70,12 +71,59 @@
                     @auth
                         <a href="{{ url('/home') }}">Home</a>
                     @else
-                        <a href="{{ route('login') }}">Login</a>
+                        <a href="{{ route('login') }}">{{ __('translations.login') }}</a>
 
                         @if (Route::has('register'))
-                            <a href="{{ route('register') }}">Register</a>
+                            <a href="{{ route('register') }}">{{ __('translations.register') }}</a>
                         @endif
                     @endauth
+
+                    <ul class="c-header-nav">
+                        <li>
+                            <nav class="navbar navbar-expand navbar-dark">
+                        <div class="collapse navbar-collapse" id="navbarToggler">
+                            <ul class="navbar-nav ml-auto">
+                                @php $locale = session()->get('locale'); @endphp
+                                <li class="nav-item dropdown">
+                                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
+                                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                        @switch($locale)
+                                            @case('en')
+                                            <div class="c-avatar">
+                                               English
+                                            </div>
+                                            @break
+                                            @case('fas')
+                                            <div class="c-avatar">
+                                                Farsi
+                                            </div>
+                                            @break
+                                            @default
+                                            <div class="c-avatar">
+                                                English
+                                            </div>
+                                        @endswitch
+                                        <span class="caret"></span>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" href="/en">
+                                            <div class="c-avatar">
+                                                 English
+                                            </div>
+                                        </a>
+                                        <a class="dropdown-item" href="/fas">
+                                            <div class="c-avatar">
+                                                 Farsi
+                                            </div>
+                                        </a>
+                                    </div>
+                                </li>
+
+                            </ul>
+                        </div>
+                    </nav>
+                        </li>
+                    </ul>
                 </div>
             @endif
 
