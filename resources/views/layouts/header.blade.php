@@ -12,11 +12,54 @@
 <ul class="c-header-nav mfs-auto">
 </ul>
 <ul class="c-header-nav">
+    <li>
+        <nav class="navbar navbar-expand navbar-dark">
+            <div class="collapse navbar-collapse" id="navbarToggler">
+                <ul class="navbar-nav ml-auto">
+                    @php $locale = session()->get('locale'); @endphp
+                    <li class="nav-item dropdown">
+                        <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                            @switch($locale)
+                                @case('en')
+                                <div class="c-avatar">
+                                    <img class="c-avatar-img" src="{{asset('images/cif-us.svg')}}"> English
+                                </div>
+                                @break
+                                @case('fas')
+                                <div class="c-avatar">
+                                    <img class="c-avatar-img" src="{{asset('images/cif-ir.svg')}}"> Farsi
+                                </div>
+                                @break
+                                @default
+                                <div class="c-avatar">
+                                    <img class="c-avatar-img" src="{{asset('images/cif-us.svg')}}"> English
+                                </div>
+                            @endswitch
+                            <span class="caret"></span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="/en">
+                                <div class="c-avatar">
+                                    <img class="c-avatar-img" src="{{asset('images/cif-us.svg')}}"> English
+                                </div>
+                            </a>
+                            <a class="dropdown-item" href="/fas">
+                                <div class="c-avatar">
+                                    <img class="c-avatar-img" src="{{asset('images/cif-ir.svg')}}"> Farsi
+                                </div>
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </li>
     <li class="c-header-nav-item dropdown">
         <a class="c-header-nav-link" data-toggle="dropdown" href="#" role="button"
            aria-haspopup="true" aria-expanded="false">
             <div class="c-avatar">
-                <img class="c-avatar-img" src="https://infyom.com/images/logo/blue_logo_150x150.png" alt="dddd">
+                <img class="c-avatar-img" src="{{asset('images/unknown.png')}}" alt="User">
             </div>
         </a>
         <div class="dropdown-menu dropdown-menu-right pt-0">
@@ -24,7 +67,8 @@
             <a class="dropdown-item" href="#">
                 <i class="c-icon mfe-2 cil-user"></i>Profile
             </a>
-            <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+            <a class="dropdown-item" href="#"
+               onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                 <i class="c-icon mfe-2 cil-account-logout"></i>Logout
             </a>
             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
