@@ -2,18 +2,59 @@
 @extends('layouts.app')
 
 @section('content')
+<div class="container-fluid">
+    {{ Form::open(['route'=>['users.info.update',$locale,$user->id], 'method' => 'put']) }}
+        <div>
+        <div class="form-group">
+            <label for="english_name">{{ __('translations.english_name') }}</label>
+            <input type="text" name="english_name" class="form-control" id="english_name"
+                   value="@if($user) {{ $user['english_name'] }} @endif" required>
+            @error('english_name')
+            <div class="alert alert-danger">{{ $message }}</div>
+            @enderror
+        </div>
+
+        <div class="form-group">
+            <label for="persian_name">{{ __('translations.persian_name') }}</label>
+            <input type="text" name="persian_name" class="form-control" id="persian_name"
+                   value="@if($user) {{ $user['persian_name'] }} @endif" required>
+            @error('persian_name')
+            <div class="alert alert-danger">{{ $message }}</div>
+            @enderror
+        </div>
+
+        <div class="form-group">
+            <label for="password">{{ __('translations.password') }}</label>
+            <input type="password" name="password" class="form-control" id="password">
+
+            @error('password')
+                <div class="alert alert-danger">{{ $message }}</div>
+            @enderror
+        </div>
+
+        <div class="form-group">
+            <label for="password_confirmation">{{ __('translations.password_confirmation') }}</label>
+            <input type="password" name="password_confirmation" class="form-control" id="password_confirmation">
+            @error('password_confirmation')
+                <div class="alert alert-danger">{{ $message }}</div>
+            @enderror
+        </div>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary mb-2">{{ __('translations.submit') }}</button>
+    </div>
+    {{ Form::close() }}
+</div>
+
 <div>
-    {{ Form::open(['route'=>['users.profile.update',$locale,$profile->id ?? null], 'method' => 'put']) }}
-        <input type="hidden" name="user_id" value="{{  session()->get('user') }}">
-
-        <div id="accordion">
-
+    {{ Form::open(['route'=>['users.profile.update',$locale,$user->id,$profile->id ?? null], 'method' => 'put']) }}
+         <div id="accordion">
             <h3>{{ __('translations.personal_information') }}</h3>
             <div>
                 <div class="form-group">
                     <label for="birthday">{{ __('translations.birthday') }}</label>
                     <input type="date" name="birthday" class="form-control" id="birthday"
-                           value="@if($profile) {{ $profile['birthday'] }} @endif" required>
+                           value="@if($profile) {{ $profile['birthday'] }} @endif">
                     @error('birthday')
                         <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
@@ -22,7 +63,7 @@
                 <div class="form-group">
                     <label for="birthday_place">{{ __('translations.birthday_place') }}</label>
                     <input type="text" name="birthday_place" class="form-control" id="birthday_place"
-                           value="@if($profile) {{ $profile['birthday_place'] }} @endif" required>
+                           value="@if($profile) {{ $profile['birthday_place'] }} @endif">
                     @error('birthday_place')
                         <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
@@ -31,7 +72,7 @@
                 <div class="form-group">
                     <label for="residence_place">{{ __('translations.residence_place') }}</label>
                     <input type="text" name="residence_place" class="form-control" id="residence_place"
-                           value="@if($profile) {{ $profile['residence_place'] }} @endif" required>
+                           value="@if($profile) {{ $profile['residence_place'] }} @endif">
 
                     @error('residence_place')
                         <div class="alert alert-danger">{{ $message }}</div>
@@ -73,7 +114,7 @@
                 <div class="form-group">
                     <label for="father_name">{{ __('translations.father_name') }}</label>
                     <input type="text" name="father_name" class="form-control" id="father_name"
-                           value="@if($profile) {{ $profile['father_name'] }} @endif" required>
+                           value="@if($profile) {{ $profile['father_name'] }} @endif">
 
                     @error('father_name')
                         <div class="alert alert-danger">{{ $message }}</div>
@@ -83,7 +124,7 @@
                 <div class="form-group">
                     <label for="mother_name">{{ __('translations.mother_name') }}</label>
                     <input type="text" name="mother_name" class="form-control" id="mother_name"
-                           value="@if($profile) {{ $profile['mother_name'] }} @endif" required>
+                           value="@if($profile) {{ $profile['mother_name'] }} @endif">
 
                     @error('mother_name')
                         <div class="alert alert-danger">{{ $message }}</div>
@@ -93,7 +134,7 @@
                 <div class="form-group">
                     <label for="spouse_name">{{ __('translations.spouse_name') }}</label>
                     <input type="text" name="spouse_name" class="form-control" id="spouse_name"
-                           value="@if($profile) {{ $profile['spouse_name'] }} @endif" required>
+                           value="@if($profile) {{ $profile['spouse_name'] }} @endif">
 
                     @error('spouse_name')
                         <div class="alert alert-danger">{{ $message }}</div>
