@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use App\Model\Profile;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 
 class UsersController extends Controller
 {
+    protected const ADMIN = 1;
     /**
      * UsersController constructor.
      */
@@ -39,11 +41,18 @@ class UsersController extends Controller
      */
     public function profileEdit(string $lang, string $username)
     {
-        $user = User::where('username', $username)->first();
+        $activeUser  = session()->get('user');
+        $currentUser = User::where('username', $activeUser)->first();
+
+        $user = ($username !== $activeUser && $currentUser->role !== self::ADMIN) ?
+            $currentUser :
+            User::where('username', $username)->first();
+
         $profile = Profile::where('user_id', $user->id)->first();
 
         return view('users.profile.edit', [
-            'profile' => $profile
+            'profile' => $profile,
+            'user'    => $user
         ]);
     }
 
@@ -57,20 +66,20 @@ class UsersController extends Controller
      */
     public function profileUpdate(
         string $locale,
+        User $user,
         Profile $profile,
         Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'user_id'         => 'required|string',
-            'birthday'        => 'required|date',
-            'birthday_place'  => 'required|string|max:40',
+            'birthday'        => 'nullable|date',
+            'birthday_place'  => 'nullable|string|max:40',
             'residence_place' => 'required|string|max:430',
             'education'       => 'nullable|string|max:40',
             'job_title'       => 'nullable|string|max:50',
             'job_place'       => 'nullable|string|max:40',
-            'father_name'     => 'required|string|max:40',
-            'mother_name'     => 'required|string|max:40',
-            'spouse_name'     => 'required|string|max:40',
+            'father_name'     => 'nullable|string|max:40',
+            'mother_name'     => 'nullable|string|max:40',
+            'spouse_name'     => 'nullable|string|max:40',
             'marriage_date'   => 'nullable|date',
             'marriage_place'  => 'nullable|string|max:40',
             'children_number' => 'nullable|integer|max:20',
@@ -86,8 +95,6 @@ class UsersController extends Controller
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator->errors());
         }
-
-        $user = User::where('username', $request->get('user_id'))->first();
 
         Profile::updateOrCreate(
             [
@@ -114,6 +121,41 @@ class UsersController extends Controller
                 'death_place'     => $request->get('death_place'),
                 'burial_place'    => $request->get('burial_place')
             ]);
+
+        return redirect()->intended(route('home', [$locale]));
+    }
+
+
+    /**
+     * @param  string  $locale
+     * @param  Profile  $profile
+     * @param  Request  $request
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function userInfoUpdate(
+        string $locale,
+        User $user,
+        Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'english_name'     => 'required|string|max:70',
+            'persian_name'     => 'required|string|max:70',
+            'password'         => 'nullable|min:8|max:20|confirmed',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator->errors());
+        }
+
+        $user->english_name = $request->get('english_name');
+        $user->persian_name = $request->get('persian_name');
+
+        if ($request->get('password')) {
+            $user->password = Hash::make($request->get('password'));
+        }
+
+        $user->save();
 
         return redirect()->intended(route('home', [$locale]));
     }

@@ -39,5 +39,6 @@ Route::group(['middleware'=>'localization'],function () {
     // Users
     Route::get('/{lang}/users', 'UsersController@index')->name('users');
     Route::get('/{lang}/users/profile/{username}', 'UsersController@profileEdit')->name('users.profile');
-    Route::put('/{lang}/users/profile/update/{profile?}', 'UsersController@profileUpdate')->name('users.profile.update');
+    Route::put('/{lang}/users/profile/{user}/update/{profile?}', 'UsersController@profileUpdate')->name('users.profile.update');
+    Route::put('/{lang}/users/info/update/{user}', 'UsersController@userInfoUpdate')->name('users.info.update');
 });
