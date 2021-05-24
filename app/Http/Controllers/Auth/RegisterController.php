@@ -45,14 +45,16 @@ class RegisterController extends Controller
      * Get a validator for an incoming registration request.
      *
      * @param  array  $data
+     *
      * @return \Illuminate\Contracts\Validation\Validator
      */
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'english_name' => ['required', 'string', 'max:255'],
+            'persian_name' => ['required', 'string', 'max:255'],
+            'username'     => ['string', 'max:255', 'unique:users'],
+            'password'     => ['required', 'string', 'min:8', 'confirmed'],
         ]);
     }
 
@@ -60,14 +62,34 @@ class RegisterController extends Controller
      * Create a new user instance after a valid registration.
      *
      * @param  array  $data
+     *
      * @return \App\User
      */
     protected function create(array $data)
     {
+        $userName = $this->createUserName($data['english_name']);
+
         return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
+            'english_name' => $data['english_name'],
+            'persian_name' => $data['persian_name'],
+            'username'     => $userName,
+            'password'     => Hash::make($data['password']),
         ]);
+    }
+
+
+    /**
+     * @param  string  $name
+     *
+     * @return string
+     */
+    private function createUserName(string $name): string
+    {
+        $lastUserId = User::max('id');
+
+        $userName = strtolower(trim($name));
+
+        // for example shahab.espahbodi1
+        return str_replace(' ', '.', $userName) . ++$lastUserId;
     }
 }

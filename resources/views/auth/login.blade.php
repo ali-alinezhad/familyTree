@@ -36,10 +36,10 @@
                                       <i class="cil-user"></i>
                                     </span>
                                 </div>
-                                <input type="email" class="form-control @error('email') is-invalid @enderror"
-                                       name="email" value="{{ old('email') }}"
-                                       placeholder="Email">
-                                @error('email')
+                                <input type="text" class="form-control @error('username') is-invalid @enderror"
+                                       name="username" value="{{ old('username') }}"
+                                       placeholder="User Name">
+                                @error('username')
                                 <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
