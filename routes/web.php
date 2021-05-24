@@ -16,58 +16,28 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
-//Route::get('/{lang}', function ($lang) {
-//    \Illuminate\Support\Facades\App::setlocale($lang);
-//    return view('home');
-//});
-
-
-//Auth::routes();
-//
-//Route::get('/home', 'HomeController@index')->name('home');
-//
-//Auth::routes();
-//
-//Route::get('/home', 'HomeController@index')->name('home');
-//Auth::routes();
-//
-//Route::get('/home', 'HomeController@index')->name('home');
-//
-//    Route::get('/gallery', 'GalleryController@index')->name('gallery');
-//    Route::get('/tree', 'TreeController@index')->name('tree');
-//    Route::get('/news', 'NewsController@index')->name('news');
 
 Route::group(['middleware'=>'localization'],function () {
     Auth::routes();
-
     Route::get('/{lang}/home', 'LocalizationController@index')->name('locale');
     Route::get('/home', 'HomeController@index')->name('home');
-
     Auth::routes();
-
     Route::get('/{lang}/home', 'HomeController@index')->name('home');
     Auth::routes();
     Route::get('/{lang}', 'LocalizationController@index')->name('locale');
     Route::get('/{lang}/home', 'HomeController@index')->name('home');
 
+    // Gallery
     Route::get('/{lang}/gallery', 'GalleryController@index')->name('gallery');
-    Route::get('/{lang}/tree', 'TreeController@index')->name('tree');
-    Route::get('/{lang}/news', 'NewsController@index')->name('news');
-});
 
-//Route::middleware(['localization'])->group(function () {
-//    Auth::routes();
-//
-//    Route::get('/{lang}/home', 'HomeController@index')->name('home');
-//
-//    Auth::routes();
-//
-//    Route::get('/{lang}/home', 'HomeController@index')->name('home');
-//    Auth::routes();
-//
-//    Route::get('/{lang}/home', 'HomeController@index')->name('home');
-//
-//    Route::get('/{lang}/gallery', 'GalleryController@index')->name('gallery');
-//    Route::get('/{lang}/tree', 'TreeController@index')->name('tree');
-//    Route::get('/{lang}/news', 'NewsController@index')->name('news');
-//});
+    // Tree
+    Route::get('/{lang}/tree', 'TreeController@index')->name('tree');
+
+    // News
+    Route::get('/{lang}/news', 'NewsController@index')->name('news');
+
+    // Users
+    Route::get('/{lang}/users', 'UsersController@index')->name('users');
+    Route::get('/{lang}/users/profile/{username}', 'UsersController@profileEdit')->name('users.profile');
+    Route::put('/{lang}/users/profile/update/{profile?}', 'UsersController@profileUpdate')->name('users.profile.update');
+});

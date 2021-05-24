@@ -1,3 +1,6 @@
+@php
+$username = session()->get('user');
+@endphp
 <button class="c-header-toggler c-class-toggler d-lg-none mfe-auto" type="button" data-target="#sidebar"
         data-class="c-sidebar-show">
     <i class="c-icon c-icon-lg cil-menu"></i>
@@ -16,7 +19,7 @@
         <nav class="navbar navbar-expand navbar-dark">
             <div class="collapse navbar-collapse" id="navbarToggler">
                 <ul class="navbar-nav ml-auto">
-                    @php $locale = session()->get('locale'); @endphp
+                    @php $locale = session()->get('locale') ?? 'en'; @endphp
                     <li class="nav-item dropdown">
                         <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
@@ -64,12 +67,12 @@
         </a>
         <div class="dropdown-menu dropdown-menu-right pt-0">
             <div class="dropdown-header bg-light py-2"><strong>Account</strong></div>
-            <a class="dropdown-item" href="#">
-                <i class="c-icon mfe-2 cil-user"></i>Profile
+            <a class="dropdown-item" href="{{ route('users.profile',['lang' => $locale,'username'=> $username]) }}">
+                <i class="c-icon mfe-2 cil-user"></i>{{ __('translations.profile') }} ({{  $username }})
             </a>
             <a class="dropdown-item" href="#"
                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                <i class="c-icon mfe-2 cil-account-logout"></i>Logout
+                <i class="c-icon mfe-2 cil-account-logout"></i>{{ __('translations.logout') }}
             </a>
             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                 @csrf

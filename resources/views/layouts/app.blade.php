@@ -37,9 +37,10 @@
     </footer>
 </div>
 
-<script src="{{ mix('js/app.js') }}" defer></script>
+{{--<script src="{{ mix('js/app.js') }}" defer></script>--}}
+<script src="{{ mix('js/app.js') }}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.perfect-scrollbar/1.4.0/perfect-scrollbar.js"></script>
-
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 @yield('third_party_scripts')
 
 @stack('page_scripts')
