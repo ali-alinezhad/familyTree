@@ -44,5 +44,8 @@ return [
     'persian_name'          => 'Full Name (Farsi)',
     'password'              => 'Password',
     'password_confirmation' => 'Confirm Password',
+    'role'                  => 'Role',
+    'status'                => 'Status',
+    'action'                => 'Action',
 
 ];

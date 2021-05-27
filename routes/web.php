@@ -38,7 +38,10 @@ Route::group(['middleware'=>'localization'],function () {
 
     // Users
     Route::get('/{lang}/users', 'UsersController@index')->name('users');
-    Route::get('/{lang}/users/profile/{username}', 'UsersController@profileEdit')->name('users.profile');
+    Route::post('/users/get-datatable-data', 'UsersController@dataTablesData')->name('users.datatables.data');
+    Route::get('/{lang}/users/profile/edit/{username?}', 'UsersController@profileEdit')->name('users.profile');
     Route::put('/{lang}/users/profile/{user}/update/{profile?}', 'UsersController@profileUpdate')->name('users.profile.update');
+    Route::delete('/{lang}/users/destroy/{user}', 'UsersController@destroy')->name('users.destroy');
     Route::put('/{lang}/users/info/update/{user}', 'UsersController@userInfoUpdate')->name('users.info.update');
+    Route::get('/{lang}/users/role/change/{user}', 'UsersController@changeUserRole')->name('users.role.change');
 });
