@@ -1,5 +1,5 @@
 @php
-    $locale = session()->get('locale') ?? 'en';
+    $locale = session()->get('locale') ?? 'fas';
 @endphp
 <li class="c-sidebar-nav-item">
     <a class="c-sidebar-nav-link c-active" href="{{ route('home',['lang'=> $locale]) }}">

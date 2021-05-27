@@ -1,4 +1,4 @@
-@php $locale = session()->get('locale') ?? 'en'; @endphp
+@php $locale = session()->get('locale') ?? 'fas'; @endphp
 @extends('layouts.app')
 
 @section('content')

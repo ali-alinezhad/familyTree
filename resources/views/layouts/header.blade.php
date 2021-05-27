@@ -19,7 +19,7 @@ $username = session()->get('user');
         <nav class="navbar navbar-expand navbar-dark">
             <div class="collapse navbar-collapse" id="navbarToggler">
                 <ul class="navbar-nav ml-auto">
-                    @php $locale = session()->get('locale') ?? 'en'; @endphp
+                    @php $locale = session()->get('locale') ?? 'fas'; @endphp
                     <li class="nav-item dropdown">
                         <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>

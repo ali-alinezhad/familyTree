@@ -27,8 +27,58 @@ class UsersController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index($locale)
+    public function index($locale,Request $request)
     {
+        $users = User::select();
+
+        $totalData = $users->count();
+
+        $columns = [
+            'english_name',
+            'persian_name',
+            'role',
+            'status',
+            'created_at',
+            'updated_at'
+        ];
+
+        $limit = $request->input('length');
+        $start = $request->input('start');
+      //  $order = $columns[$request->input('order.0.column')];
+     //   $dir   = $request->input('order.0.dir');
+
+        if (empty($request->input('search.value'))) {
+            $users = $users
+                ->limit($limit)
+              //  ->orderBy($order, $dir)
+                ->get();
+
+            $totalFiltered = $totalData;
+        } else {
+            $search = $request->input('search.value');
+
+            $users = $users
+                ->Where('hosts.english_name', 'like', "%{$search}%");
+//                ->orWhere('hosts.status', 'like', "%{$search}%")
+//                ->orWhere('countries.name', 'like', "%{$search}%")
+//                ->orWhere('hosts.custom_tag', 'like', "%{$search}%")
+//                ->orWhere('hosts.external_host_tag', 'like', "%{$search}%")
+//                ->orWhere('topics.name', 'like', "%{$search}%");
+
+            $totalFiltered = $users->count();
+
+            $users = $users
+             //   ->offset($start)
+                ->limit($limit)
+             //   ->orderBy($order, $dir)
+                ->get();
+        }
+
+      //  dd($users);
+
+
+
+        session()->put('user', $request->user()->username);
         return view('users.home');
     }
 
@@ -158,5 +208,106 @@ class UsersController extends Controller
         $user->save();
 
         return redirect()->intended(route('home', [$locale]));
+    }
+
+
+
+    public function destroy($locale, User $user)
+    {
+        dd($user);
+    }
+
+
+    public function changeUserRole($locale, User $user)
+    {
+        dd($user);
+    }
+
+
+    public function dataTablesData(Request $request)
+    {
+        $users = User::select();
+
+        $totalData = $users->count();
+
+        $columns = [
+            'english_name',
+            'persian_name',
+            'role',
+            'status',
+            'action'
+        ];
+
+        $limit = $request->input('length');
+        $start = $request->input('start');
+        $order = $columns[$request->input('order.0.column')];
+        $dir   = $request->input('order.0.dir');
+
+        if (empty($request->input('search.value'))) {
+            $users = $users
+                ->offset($start)
+                ->limit($limit)
+                ->orderBy($order, $dir)
+                ->get();
+
+            $totalFiltered = $totalData;
+        } else {
+            $search = $request->input('search.value');
+
+            $users = $users
+                ->Where('persian_name', 'like', "%{$search}%");
+//                ->orWhere('hosts.status', 'like', "%{$search}%")
+//                ->orWhere('countries.name', 'like', "%{$search}%")
+//                ->orWhere('hosts.custom_tag', 'like', "%{$search}%")
+//                ->orWhere('hosts.external_host_tag', 'like', "%{$search}%")
+//                ->orWhere('topics.name', 'like', "%{$search}%");
+
+            $totalFiltered = $users->count();
+
+            $users = $users
+               ->offset($start)
+                ->limit($limit)
+                ->orderBy($order, $dir)
+                ->get();
+        }
+
+        $data = [];
+
+        if ($users) {
+            foreach ($users as $user) {
+                $data[] = [
+                    'english_name' => $user->english_name,
+                    'persian_name' => $user->persian_name,
+                    'status'       => $user->status,
+                    'role'         => $user->role,
+                    'action'       => '
+                        <a class="btn btn-xs btn-success" style="float: left;"
+                           href="' . route('users.role.change', [session()->get('locale') ?? 'fas',$user->id]) . '" data-toggle="tooltip"
+                           data-placement="top">
+                            <i class="cil-check" title="Edit"></i>
+                        </a>
+                        <a class="btn btn-xs btn-info" style="float: left;"
+                           href="' . route('users.profile', [session()->get('locale') ?? 'fas',$user->username]) . '" data-toggle="tooltip"
+                           data-placement="top">
+                            <i class="cil-pencil" title="Edit"></i>
+                        </a>
+                         ' . \Form::open(['route'=>['users.destroy',[session()->get('locale') ?? 'fas', $user->id]], 'method' => 'delete', 'style' => 'display: inline; float: left;']) . '
+                            <button class="btn btn-xs btn-danger user_destroy">
+                                <i class="cil-trash" title="Delete"></i>
+                            </button>
+                        ' . \Form::close() . '
+                    ',
+                ];
+            }
+        }
+
+        $json_data = [
+            'draw'            => (int) ($request->input('draw')),
+            'recordsTotal'    => (int) $totalData,
+            'recordsFiltered' => (int) $totalFiltered,
+            'data'            => $data,
+        ];
+
+        return json_encode($json_data);
     }
 }
