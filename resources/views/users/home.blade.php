@@ -35,7 +35,6 @@
     <script type="text/javascript" charset="utf8"
             src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
 
-
     <script type="text/javascript">
 
         $(document).ready(function () {
@@ -62,16 +61,6 @@
             });
 
             $('#usersTable').dataTable().fnFilterOnReturn();
-
-            $(document).on('click', '.user_destroy', function (e) {
-                console.log('frfrfrfr')
-                e.preventDefault();
-
-                if (confirm('Are you sure?')) {
-                    var form = $(this).parent('form');
-                    form.submit();
-                }
-            });
         });
     </script>
 

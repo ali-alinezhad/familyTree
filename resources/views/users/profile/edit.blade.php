@@ -46,15 +46,16 @@
     {{ Form::close() }}
 </div>
 
+<img src="{{ asset($profile['picture']) }}" width="70" height="70"/>
 <div>
-    {{ Form::open(['route'=>['users.profile.update',$locale,$user->id,$profile->id ?? null], 'method' => 'put']) }}
+    {{ Form::open(['route'=>['users.profile.update',$locale,$user->id,$profile->id ?? null], 'method' => 'put', 'enctype'=>"multipart/form-data"]) }}
          <div id="accordion">
             <h3>{{ __('translations.personal_information') }}</h3>
             <div>
                 <div class="form-group">
                     <label for="birthday">{{ __('translations.birthday') }}</label>
                     <input type="date" name="birthday" class="form-control" id="birthday"
-                           value="@if($profile) {{ $profile['birthday'] }} @endif">
+                           value="@if($profile['birthday']){{ $profile['birthday']->format('Y-m-d') }}@endif">
                     @error('birthday')
                         <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
@@ -205,8 +206,7 @@
 
                 <div class="form-group">
                     <label for="picture">{{ __('translations.picture') }}</label>
-                    <input type="file" name="picture" class="form-control" id="picture"
-                           value="@if($profile) {{ $profile['picture'] }} @endif">
+                    <input type="file" name="picture" class="form-control" id="picture">
 
                     @error('picture')
                         <div class="alert alert-danger">{{ $message }}</div>
@@ -216,7 +216,7 @@
                 <div class="form-group">
                     <label for="death_date">{{ __('translations.death_date') }}</label>
                     <input type="date" name="death_date" class="form-control" id="death_date"
-                           value="@if($profile) {{ $profile['death_date'] }} @endif">
+                           value="@if($profile['death_date']){{ $profile['death_date']->format('Y-m-d') }}@endif">
 
                     @error('death_date')
                         <div class="alert alert-danger">{{ $message }}</div>
