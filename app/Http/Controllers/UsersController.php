@@ -11,7 +11,10 @@ use Illuminate\Support\Facades\Validator;
 
 class UsersController extends Controller
 {
+
     protected const ADMIN = 1;
+    protected const PATH  = 'images/users/';
+
     /**
      * UsersController constructor.
      */
@@ -27,57 +30,8 @@ class UsersController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index($locale,Request $request)
+    public function index($locale, Request $request)
     {
-        $users = User::select();
-
-        $totalData = $users->count();
-
-        $columns = [
-            'english_name',
-            'persian_name',
-            'role',
-            'status',
-            'created_at',
-            'updated_at'
-        ];
-
-        $limit = $request->input('length');
-        $start = $request->input('start');
-      //  $order = $columns[$request->input('order.0.column')];
-     //   $dir   = $request->input('order.0.dir');
-
-        if (empty($request->input('search.value'))) {
-            $users = $users
-                ->limit($limit)
-              //  ->orderBy($order, $dir)
-                ->get();
-
-            $totalFiltered = $totalData;
-        } else {
-            $search = $request->input('search.value');
-
-            $users = $users
-                ->Where('hosts.english_name', 'like', "%{$search}%");
-//                ->orWhere('hosts.status', 'like', "%{$search}%")
-//                ->orWhere('countries.name', 'like', "%{$search}%")
-//                ->orWhere('hosts.custom_tag', 'like', "%{$search}%")
-//                ->orWhere('hosts.external_host_tag', 'like', "%{$search}%")
-//                ->orWhere('topics.name', 'like', "%{$search}%");
-
-            $totalFiltered = $users->count();
-
-            $users = $users
-             //   ->offset($start)
-                ->limit($limit)
-             //   ->orderBy($order, $dir)
-                ->get();
-        }
-
-      //  dd($users);
-
-
-
         session()->put('user', $request->user()->username);
         return view('users.home');
     }
@@ -91,12 +45,13 @@ class UsersController extends Controller
      */
     public function profileEdit(string $lang, string $username)
     {
-        $activeUser  = session()->get('user');
+        $activeUser = session()->get('user');
         $currentUser = User::where('username', $activeUser)->first();
 
-        $user = ($username !== $activeUser && $currentUser->role !== self::ADMIN) ?
-            $currentUser :
-            User::where('username', $username)->first();
+        $user = ($username !== $activeUser && $currentUser
+            && $currentUser->role !== self::ADMIN)
+            ? $currentUser
+            : User::where('username', $username)->first();
 
         $profile = Profile::where('user_id', $user->id)->first();
 
@@ -136,14 +91,21 @@ class UsersController extends Controller
             'titles'          => 'nullable|string|max:50',
             'telephone'       => 'nullable|integer',
             'email'           => 'nullable|string|max:50',
-            'picture'         => 'nullable|string|max:50',
+            'picture'         => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'death_date'      => 'nullable|date',
             'death_place'     => 'nullable|string|max:40',
-            'burial_place'    => 'nullable|string|max:40'
+            'burial_place'    => 'nullable|string|max:40',
         ]);
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator->errors());
+        }
+
+        $picture = $request->picture;
+
+        if ($picture) {
+            $imageName = $user->id . '.' . $picture->extension();
+            $picture->move(self::PATH, $imageName);
         }
 
         Profile::updateOrCreate(
@@ -166,7 +128,7 @@ class UsersController extends Controller
                 'titles'          => $request->get('titles'),
                 'telephone'       => $request->get('telephone'),
                 'email'           => $request->get('email'),
-                'picture'         => $request->get('picture'),
+                'picture'         => self::PATH . $imageName ?? null,
                 'death_date'      => $request->get('death_date'),
                 'death_place'     => $request->get('death_place'),
                 'burial_place'    => $request->get('burial_place')
@@ -189,9 +151,9 @@ class UsersController extends Controller
         Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'english_name'     => 'required|string|max:70',
-            'persian_name'     => 'required|string|max:70',
-            'password'         => 'nullable|min:8|max:20|confirmed',
+            'english_name' => 'required|string|max:70',
+            'persian_name' => 'required|string|max:70',
+            'password'     => 'nullable|min:8|max:20|confirmed',
         ]);
 
         if ($validator->fails()) {
@@ -211,21 +173,61 @@ class UsersController extends Controller
     }
 
 
-
+    /**
+     * @param $locale
+     * @param  User  $user
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Exception
+     */
     public function destroy($locale, User $user)
     {
-        dd($user);
+        $user->delete();
+        Profile::where('user_id', $user->id)->delete();
+
+        return redirect()->intended(route('users', [$locale]));
+
     }
 
 
+    /**
+     * @param $locale
+     * @param  User  $user
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function changeUserRole($locale, User $user)
     {
-        dd($user);
+        $user->role < 2 ? ($user->role = 2) : ($user->role = 1);
+        $user->save();
+
+        return redirect()->intended(route('users', [$locale]));
     }
 
 
+    /**
+     * @param $locale
+     * @param  User  $user
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function showDetails($locale, User $user)
+    {
+        return redirect()->intended(route('users', [$locale]));
+
+    }
+
+
+    /**
+     * @param  Request  $request
+     *
+     * @return false|string
+     */
     public function dataTablesData(Request $request)
     {
+        $activeUser = session()->get('user');
+        $currentUser = User::where('username', $activeUser)->first();
+
         $users = User::select();
 
         $totalData = $users->count();
@@ -254,18 +256,13 @@ class UsersController extends Controller
         } else {
             $search = $request->input('search.value');
 
-            $users = $users
-                ->Where('persian_name', 'like', "%{$search}%");
-//                ->orWhere('hosts.status', 'like', "%{$search}%")
-//                ->orWhere('countries.name', 'like', "%{$search}%")
-//                ->orWhere('hosts.custom_tag', 'like', "%{$search}%")
-//                ->orWhere('hosts.external_host_tag', 'like', "%{$search}%")
-//                ->orWhere('topics.name', 'like', "%{$search}%");
+            $users = $users->Where('persian_name', 'like', "%{$search}%")
+                ->orWhere('english_name', 'like', "%{$search}%");
 
             $totalFiltered = $users->count();
 
             $users = $users
-               ->offset($start)
+                ->offset($start)
                 ->limit($limit)
                 ->orderBy($order, $dir)
                 ->get();
@@ -279,24 +276,45 @@ class UsersController extends Controller
                     'english_name' => $user->english_name,
                     'persian_name' => $user->persian_name,
                     'status'       => $user->status,
-                    'role'         => $user->role,
-                    'action'       => '
-                        <a class="btn btn-xs btn-success" style="float: left;"
-                           href="' . route('users.role.change', [session()->get('locale') ?? 'fas',$user->id]) . '" data-toggle="tooltip"
+                    'role'         => '<button type="button" class="change-status-btn btn btn-xs btn-'
+                        . ($user->role === self::ADMIN ? 'danger' : 'success')
+                        . '" data-id="' . $user->id . '">
+                            ' . ($user->role === self::ADMIN ? 'Admin'
+                            : 'Assistant') . '
+                        </button>',
+
+                    'action' =>
+                        '
+                        <a class="btn btn-xs btn-primary" style="float: left;"
+                           href="' . route('users.details',
+                            [session()->get('locale') ?? 'fas', $user->id]) . '" data-toggle="tooltip"
                            data-placement="top">
-                            <i class="cil-check" title="Edit"></i>
+                            <i class="cil-user" title=Admin></i>
+                        </a>' .
+
+                        ($currentUser->role === self::ADMIN ? '
+                        <a class="btn btn-xs btn-success change-status-btn" style="float: left;"
+                           href="' . route('users.role.change',
+                                [session()->get('locale') ?? 'fas', $user->id])
+                            . '" data-toggle="tooltip"
+                           data-placement="top">
+                            <i class="cil-check" title=Admin></i>
                         </a>
                         <a class="btn btn-xs btn-info" style="float: left;"
-                           href="' . route('users.profile', [session()->get('locale') ?? 'fas',$user->username]) . '" data-toggle="tooltip"
+                           href="' . route('users.profile', [
+                                session()->get('locale') ?? 'fas',
+                                $user->username
+                            ]) . '" data-toggle="tooltip"
                            data-placement="top">
                             <i class="cil-pencil" title="Edit"></i>
                         </a>
-                         ' . \Form::open(['route'=>['users.destroy',[session()->get('locale') ?? 'fas', $user->id]], 'method' => 'delete', 'style' => 'display: inline; float: left;']) . '
-                            <button class="btn btn-xs btn-danger user_destroy">
-                                <i class="cil-trash" title="Delete"></i>
-                            </button>
-                        ' . \Form::close() . '
-                    ',
+                         <a class="btn btn-xs btn-danger" style="float: left;" onclick="return confirm(\'Delete this record?\')"
+                           href="' . route('users.destroy',
+                                [session()->get('locale') ?? 'fas', $user->id])
+                            . '" data-toggle="tooltip"
+                           data-placement="top">
+                            <i class="cil-trash" title="Delete"></i>
+                        </a>' : null),
                 ];
             }
         }
