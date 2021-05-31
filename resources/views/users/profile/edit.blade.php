@@ -241,6 +241,19 @@
                     @enderror
                 </div>
             </div>
+
+             <h3>{{ __('translations.about_me') }}</h3>
+             <div>
+                 <div class="form-group">
+                     <label for="about_me">{{ __('translations.about_me') }}</label>
+                     <textarea name="about_me" class="form-control" id="about_me">
+                         @if($profile) {{ $profile['about_me'] }} @endif
+                     </textarea>
+                     @error('children_number')
+                     <div class="alert alert-danger">{{ $message }}</div>
+                     @enderror
+                 </div>
+             </div>
         </div>
         <div class="pt-5">
             <button type="submit" class="btn btn-primary mb-2">{{ __('translations.submit') }}</button>

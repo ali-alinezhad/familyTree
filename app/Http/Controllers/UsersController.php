@@ -89,9 +89,10 @@ class UsersController extends Controller
             'marriage_place'  => 'nullable|string|max:40',
             'children_number' => 'nullable|integer|max:20',
             'titles'          => 'nullable|string|max:50',
-            'telephone'       => 'nullable|integer',
+            'telephone'       => 'nullable|integer|max:20',
             'email'           => 'nullable|string|max:50',
             'picture'         => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'about_me'        => 'nullable',
             'death_date'      => 'nullable|date',
             'death_place'     => 'nullable|string|max:40',
             'burial_place'    => 'nullable|string|max:40',
@@ -129,6 +130,7 @@ class UsersController extends Controller
                 'telephone'       => $request->get('telephone'),
                 'email'           => $request->get('email'),
                 'picture'         => self::PATH . $imageName ?? null,
+                'about_me'        =>$request->get('about_me'),
                 'death_date'      => $request->get('death_date'),
                 'death_place'     => $request->get('death_place'),
                 'burial_place'    => $request->get('burial_place')
@@ -209,11 +211,17 @@ class UsersController extends Controller
      * @param $locale
      * @param  User  $user
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function showDetails($locale, User $user)
     {
-        return redirect()->intended(route('users', [$locale]));
+
+        $profile = Profile::where('user_id', $user->id)->first();
+
+        return view('users.details', [
+            'profile' => $profile,
+            'user'    => $user
+        ]);
 
     }
 

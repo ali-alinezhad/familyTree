@@ -47,6 +47,7 @@ return [
     'role'                  => 'Role',
     'status'                => 'Status',
     'action'                => 'Action',
-    'delete_confirmation'   => 'Are you sure?'
+    'delete_confirmation'   => 'Are you sure?',
+    'about_me'              => 'About Me'
 
 ];
