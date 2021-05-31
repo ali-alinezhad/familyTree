@@ -29,9 +29,10 @@ class CreateProfileTable extends Migration
             $table->string('marriage_place')->nullable();
             $table->integer('children_number')->nullable();
             $table->string('titles')->nullable();
-            $table->integer('telephone')->nullable();
+            $table->bigInteger('telephone')->nullable();
             $table->string('email')->nullable();
             $table->string('picture')->nullable();
+            $table->longText('about_me')->nullable();
             $table->date('death_date')->nullable();
             $table->string('death_place')->nullable();
             $table->string('burial_place')->nullable();
