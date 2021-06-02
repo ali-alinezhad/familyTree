@@ -1,3 +1,4 @@
+@php $locale = session()->get('locale') ?? 'fas'; @endphp
 @extends('layouts.app')
 
 @section('third_party_stylesheets')
@@ -64,14 +65,17 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex flex-column align-items-center text-center">
-                            <img src="@if($profile['picture']){{ asset($profile['picture']) }}
-                            @else{{ asset('images/unknown.png') }}@endif" alt="Admin"
+                            <img name="{{ $profile['picture'] }}" src="@if($profile['picture']){{ asset($profile['picture']) }}@else{{ asset('/images/unknown.png') }}@endif"
                                  class="rounded-circle" width="200">
                             <div class="mt-3">
                                 <h4>{{ $user['persian_name'] ?? '--' }}</h4>
                                 <p class="text-secondary mb-1">{{ $profile['birthday'] ?? '--' }}</p>
                                 <p class="text-muted font-size-sm">{{ $profile['birthday_place'] ?? '--' }}</p>
-                                <button class="btn btn-outline-primary">Send a private message</button>
+                                @if(!$isSameUser)
+                                    <button class="btn btn-outline-primary" data-toggle="modal" data-target="#sendMessage">
+                                        Send a private message
+                                    </button>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -194,7 +198,7 @@
                                 <hr>
                                 <div class="row">
                                     <div class="col text-justify">
-                                        {{ $profile['about_me'] ?? '--' }}
+                                       @php echo $profile['about_me'] ?? '--' ; @endphp
                                     </div>
                                 </div>
 
@@ -234,6 +238,45 @@
             </div>
         </div>
     </div>
+        <div id="sendMessage" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        {{ Form::open(['route'=>['users.send.message',$locale,$user->id], 'method' => 'put']) }}
+                        <div>
+                            <div class="form-group">
+                                <label for="subject">Subject</label>
+                                <input type="text" name="subject" class="form-control" id="subject">
+                                @error('subject')
+                                    <div class="alert alert-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="form-group">
+                                <label for="description">*Description</label>
+                                <textarea type="text" name="description" class="form-control" id="description" required></textarea>
+                                @error('description')
+                                <div class="alert alert-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary mb-2">Send</button>
+                        </div>
+                        {{ Form::close() }}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
     @else
         <div class="text-center"> There is no detail informations</div>
     @endif
