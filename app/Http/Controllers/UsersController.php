@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Model\Messages;
 use App\Model\Profile;
 use App\User;
 use Illuminate\Http\Request;
@@ -45,10 +46,9 @@ class UsersController extends Controller
      */
     public function profileEdit(string $lang, string $username)
     {
-        $activeUser = session()->get('user');
-        $currentUser = User::where('username', $activeUser)->first();
+        $currentUser = $this->getCurrentUser();
 
-        $user = ($username !== $activeUser && $currentUser
+        $user = ($username !== session()->get('user') && $currentUser
             && $currentUser->role !== self::ADMIN)
             ? $currentUser
             : User::where('username', $username)->first();
@@ -78,7 +78,7 @@ class UsersController extends Controller
         $validator = Validator::make($request->all(), [
             'birthday'        => 'nullable|date',
             'birthday_place'  => 'nullable|string|max:40',
-            'residence_place' => 'required|string|max:430',
+            'residence_place' => 'nullable|string|max:430',
             'education'       => 'nullable|string|max:40',
             'job_title'       => 'nullable|string|max:50',
             'job_place'       => 'nullable|string|max:40',
@@ -89,10 +89,10 @@ class UsersController extends Controller
             'marriage_place'  => 'nullable|string|max:40',
             'children_number' => 'nullable|integer|max:20',
             'titles'          => 'nullable|string|max:50',
-            'telephone'       => 'nullable|integer|max:20',
+            'telephone'       => 'nullable|regex:/[0-9]/|max:20',
             'email'           => 'nullable|string|max:50',
             'picture'         => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'about_me'        => 'nullable',
+            'about_me'        => 'nullable|string',
             'death_date'      => 'nullable|date',
             'death_place'     => 'nullable|string|max:40',
             'burial_place'    => 'nullable|string|max:40',
@@ -106,6 +106,7 @@ class UsersController extends Controller
 
         if ($picture) {
             $imageName = $user->id . '.' . $picture->extension();
+            $image     = self::PATH . $imageName;
             $picture->move(self::PATH, $imageName);
         }
 
@@ -129,8 +130,8 @@ class UsersController extends Controller
                 'titles'          => $request->get('titles'),
                 'telephone'       => $request->get('telephone'),
                 'email'           => $request->get('email'),
-                'picture'         => self::PATH . $imageName ?? null,
-                'about_me'        =>$request->get('about_me'),
+                'picture'         => $image  ?? $profile->picture ?? null,
+                'about_me'        => $request->get('about_me'),
                 'death_date'      => $request->get('death_date'),
                 'death_place'     => $request->get('death_place'),
                 'burial_place'    => $request->get('burial_place')
@@ -184,11 +185,16 @@ class UsersController extends Controller
      */
     public function destroy($locale, User $user)
     {
+        $profile = Profile::where('user_id', $user->id)->first();
+
+        if(file_exists($profile->picture)){
+            unlink($profile->picture);
+        }
+
         $user->delete();
-        Profile::where('user_id', $user->id)->delete();
+        $profile->delete();
 
         return redirect()->intended(route('users', [$locale]));
-
     }
 
 
@@ -215,14 +221,49 @@ class UsersController extends Controller
      */
     public function showDetails($locale, User $user)
     {
+        $currentUser = $this->getCurrentUser();
 
         $profile = Profile::where('user_id', $user->id)->first();
 
         return view('users.details', [
-            'profile' => $profile,
-            'user'    => $user
+            'profile'    => $profile,
+            'user'       => $user,
+            'isSameUser' => $currentUser->id === $user->id
         ]);
 
+    }
+
+
+    public function sendMessage($locale, User $user, Request $request)
+    {
+        $message   = new Messages();
+        $validator = Validator::make($request->all(), [
+            'subject'     => 'nullable|string',
+            'description' => 'required|string|min:3',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator->errors());
+        }
+
+        $message->sender_user_id   = $this->getCurrentUser()->id;
+        $message->receiver_user_id = $user->id;
+        $message->subject          = $request->get('subject');
+        $message->description      = $request->get('description');
+
+        $message->save();
+
+        return redirect()->intended(route('users.details', [$locale,$user]));
+
+    }
+
+    /**
+     * @return User|null
+     */
+    private function getCurrentUser(): ?User
+    {
+        $activeUser  = session()->get('user');
+       return User::where('username', $activeUser)->first();
     }
 
 
@@ -233,12 +274,9 @@ class UsersController extends Controller
      */
     public function dataTablesData(Request $request)
     {
-        $activeUser = session()->get('user');
-        $currentUser = User::where('username', $activeUser)->first();
-
-        $users = User::select();
-
-        $totalData = $users->count();
+        $currentUser = $this->getCurrentUser();
+        $users       = User::select();
+        $totalData   = $users->count();
 
         $columns = [
             'english_name',

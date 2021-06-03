@@ -46,7 +46,8 @@
     {{ Form::close() }}
 </div>
 
-<img src="{{ asset($profile['picture']) }}" width="70" height="70"/>
+<img src="@if($profile && $profile['picture']){{ asset($profile['picture']) }}
+@else{{ asset('images/unknown.png') }}@endif" width="70" height="70"/>
 <div>
     {{ Form::open(['route'=>['users.profile.update',$locale,$user->id,$profile->id ?? null], 'method' => 'put', 'enctype'=>"multipart/form-data"]) }}
          <div id="accordion">
@@ -55,7 +56,7 @@
                 <div class="form-group">
                     <label for="birthday">{{ __('translations.birthday') }}</label>
                     <input type="date" name="birthday" class="form-control" id="birthday"
-                           value="@if($profile['birthday']){{ $profile['birthday']->format('Y-m-d') }}@endif">
+                           value="@if($profile && $profile['birthday']){{ $profile['birthday']->format('Y-m-d') }}@endif">
                     @error('birthday')
                         <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
@@ -216,7 +217,7 @@
                 <div class="form-group">
                     <label for="death_date">{{ __('translations.death_date') }}</label>
                     <input type="date" name="death_date" class="form-control" id="death_date"
-                           value="@if($profile['death_date']){{ $profile['death_date']->format('Y-m-d') }}@endif">
+                           value="@if($profile && $profile['death_date']){{ $profile['death_date']->format('Y-m-d') }}@endif">
 
                     @error('death_date')
                         <div class="alert alert-danger">{{ $message }}</div>
@@ -246,11 +247,11 @@
              <div>
                  <div class="form-group">
                      <label for="about_me">{{ __('translations.about_me') }}</label>
-                     <textarea name="about_me" class="form-control" id="about_me">
+                     <textarea class="ckeditor form-control" name="about_me" id="my_ckeditor">
                          @if($profile) {{ $profile['about_me'] }} @endif
                      </textarea>
-                     @error('children_number')
-                     <div class="alert alert-danger">{{ $message }}</div>
+                     @error('about_me')
+                        <div class="alert alert-danger">{{ $message }}</div>
                      @enderror
                  </div>
              </div>
@@ -263,6 +264,12 @@
 @endsection
 
 @section('third_party_scripts')
+<script src="{{ asset('js/ckeditor/ckeditor.js') }}"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            CKEDITOR.replace('my_ckeditor');
+        });
+    </script>
     <script type="text/javascript">
         $(document).ready(function () {
             $("#accordion").accordion();

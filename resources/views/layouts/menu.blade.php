@@ -19,7 +19,7 @@
         </li>
         <li class="c-sidebar-nav-item">
             <a class="c-sidebar-nav-link" href="#">
-                <i class="c-sidebar-nav-icon cil-puzzle"></i> Nav dropdown item
+                <i class="c-sidebar-nav-icon cil-puzzle"></i> Inbox
             </a>
         </li>
     </ul>
