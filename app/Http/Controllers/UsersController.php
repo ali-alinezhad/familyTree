@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Helpers\Helper;
 use App\Model\Messages;
 use App\Model\Profile;
 use App\User;
@@ -17,12 +18,19 @@ class UsersController extends Controller
     protected const PATH  = 'images/users/';
 
     /**
+     * @var Helper
+     */
+    private $helper;
+
+
+    /**
      * UsersController constructor.
      */
-    public function __construct()
+    public function __construct(Helper $helper)
     {
         $this->middleware('auth');
         $this->middleware('localization');
+        $this->helper = $helper;
     }
 
 
@@ -46,7 +54,7 @@ class UsersController extends Controller
      */
     public function profileEdit(string $lang, string $username)
     {
-        $currentUser = $this->getCurrentUser();
+        $currentUser = $this->helper->getCurrentUser();
 
         $user = ($username !== session()->get('user') && $currentUser
             && $currentUser->role !== self::ADMIN)
@@ -221,7 +229,7 @@ class UsersController extends Controller
      */
     public function showDetails($locale, User $user)
     {
-        $currentUser = $this->getCurrentUser();
+        $currentUser = $this->helper->getCurrentUser();
 
         $profile = Profile::where('user_id', $user->id)->first();
 
@@ -234,39 +242,6 @@ class UsersController extends Controller
     }
 
 
-    public function sendMessage($locale, User $user, Request $request)
-    {
-        $message   = new Messages();
-        $validator = Validator::make($request->all(), [
-            'subject'     => 'nullable|string',
-            'description' => 'required|string|min:3',
-        ]);
-
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator->errors());
-        }
-
-        $message->sender_user_id   = $this->getCurrentUser()->id;
-        $message->receiver_user_id = $user->id;
-        $message->subject          = $request->get('subject');
-        $message->description      = $request->get('description');
-
-        $message->save();
-
-        return redirect()->intended(route('users.details', [$locale,$user]));
-
-    }
-
-    /**
-     * @return User|null
-     */
-    private function getCurrentUser(): ?User
-    {
-        $activeUser  = session()->get('user');
-       return User::where('username', $activeUser)->first();
-    }
-
-
     /**
      * @param  Request  $request
      *
@@ -274,7 +249,7 @@ class UsersController extends Controller
      */
     public function dataTablesData(Request $request)
     {
-        $currentUser = $this->getCurrentUser();
+        $currentUser = $this->helper->getCurrentUser();
         $users       = User::select();
         $totalData   = $users->count();
 

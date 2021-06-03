@@ -46,8 +46,13 @@ Route::group(['middleware'=>'localization'],function () {
     Route::get('/{lang}/users/role/change/{user}', 'UsersController@changeUserRole')->name('users.role.change');
     Route::get('/{lang}/users/details/{user}', 'UsersController@showDetails')->name('users.details');
 
-    Route::put('/{lang}/users/send/message/{user}', 'UsersController@sendMessage')->name('users.send.message');
-    Route::get('/{lang}/users/inbox', 'UsersController@displayInbox')->name('users.inbox');
+    //Message
+    Route::get('/{lang}/message/display/inbox', 'MessageController@index')->name('message.inbox');
+    Route::put('/{lang}/message/send/{user}', 'MessageController@sendMessage')->name('message.send');
+    Route::post('/message/get-datatable-data', 'MessageController@dataTablesData')->name('message.datatables.data');
+    Route::get('/{lang}/message/details/{message}', 'MessageController@showDetails')->name('message.details');
+    Route::put('/{lang}/message/reply/{message}', 'MessageController@replyMessage')->name('message.reply');
+    Route::get('/{lang}/message/destroy/{message}', 'MessageController@destroy')->name('message.destroy');
 
 
 });
