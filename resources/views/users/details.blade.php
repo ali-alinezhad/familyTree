@@ -247,7 +247,7 @@
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
                     <div class="modal-body">
-                        {{ Form::open(['route'=>['users.send.message',$locale,$user->id], 'method' => 'put']) }}
+                        {{ Form::open(['route'=>['message.send',$locale,$user->id], 'method' => 'put']) }}
                         <div>
                             <div class="form-group">
                                 <label for="subject">Subject</label>

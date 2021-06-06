@@ -19,6 +19,7 @@ class CreateMessagesTable extends Migration
             $table->integer('receiver_user_id');
             $table->string('subject')->nullable()->default(' ');
             $table->string('description');
+            $table->boolean('status')->nullable()->default(false);
             $table->timestamps();
         });
     }
