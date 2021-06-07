@@ -51,7 +51,7 @@ Route::group(['middleware'=>'localization'],function () {
     Route::put('/{lang}/message/send/{user}', 'MessageController@sendMessage')->name('message.send');
     Route::post('/message/get-datatable-data', 'MessageController@dataTablesData')->name('message.datatables.data');
     Route::get('/{lang}/message/details/{message}', 'MessageController@showDetails')->name('message.details');
-    Route::put('/{lang}/message/reply/{message}', 'MessageController@replyMessage')->name('message.reply');
+    Route::put('/{lang}/message/reply/{oldMessage}', 'MessageController@replyMessage')->name('message.reply');
     Route::get('/{lang}/message/destroy/{message}', 'MessageController@destroy')->name('message.destroy');
 
 

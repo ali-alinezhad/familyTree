@@ -6,9 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Helpers\Helper;
 use App\Model\Messages;
-use App\Model\Profile;
 use App\User;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -36,9 +34,6 @@ class MessageController extends Controller
      */
     public function index()
     {
-     //   $currentUser = $this->helper->getCurrentUser();
-     //   $messages    = Messages::where('receiver_user_id', $currentUser->id);
-
         return view('message.home');
     }
 
@@ -66,7 +61,7 @@ class MessageController extends Controller
             return redirect()->back()->withErrors($validator->errors());
         }
 
-        $message->sender_user_id = $this->getCurrentUser()->id;
+        $message->sender_user_id = $this->helper->getCurrentUser()->id;
         $message->receiver_user_id = $user->id;
         $message->subject = $request->get('subject');
         $message->description = $request->get('description');
@@ -92,9 +87,32 @@ class MessageController extends Controller
     }
 
 
+	public function showDetails($locale, Messages $message)
+	{
+		$currentUser = $this->helper->getCurrentUser();
+
+		$message->status = 1;
+		$message->save();
+
+		return view('message.details', [
+			'user'    		 => $currentUser,
+			'privateMessage' => $message,
+			'locale' 		 => $locale
+		]);
+
+	}
+
+
+	/**
+	 * @param $locale
+	 * @param  Messages  $oldMessage
+	 * @param  Request  $request
+	 *
+	 * @return \Illuminate\Http\RedirectResponse
+	 */
     public function replyMessage(
         $locale,
-        Messages $message,
+        Messages $oldMessage,
         Request $request
     ): \Illuminate\Http\RedirectResponse
     {
@@ -107,26 +125,17 @@ class MessageController extends Controller
             return redirect()->back()->withErrors($validator->errors());
         }
 
-        $message->sender_user_id = $this->helper->getCurrentUser()->id;
-        $message->receiver_user_id = $message->sender_user_id;
-        $message->subject = $request->get('subject');
-        $message->description = $request->get('description');
-
+        $message = new Messages();
+        $message->sender_user_id   = $this->helper->getCurrentUser()->id;
+        $message->receiver_user_id = $oldMessage->sender_user_id;
+        $message->subject 		   = $request->get('subject');
+        $message->description      = $request->get('description');
         $message->save();
 
+		$oldMessage->reply = $message->id;
+		$oldMessage->save();
+
         return redirect()->intended(route('message.inbox', [$locale]));
-    }
-
-
-    public function showDetails($locale, Messages $message)
-    {
-        $currentUser = $this->helper->getCurrentUser();
-
-        return view('message.details', [
-            'user'    => $currentUser,
-            'message' => $message
-        ]);
-
     }
 
 
@@ -181,26 +190,20 @@ class MessageController extends Controller
 
         if ($messages) {
             foreach ($messages as $message) {
+            	$sender = User::find($message->sender_user_id)->persian_name;
+            	$reply  = $message->reply ? ' - replied': '';
                 $data[] = [
-                    'sender'     => User::find($message->sender_user_id)->persian_name,
+                    'sender'     => $message->status ? $sender : '<h5>' . $sender . '</h5>',
                     'subject'    => $message->subject,
                     'created_at' => $message->created_at->format('d-m-Y'),
-                    'status'     => $message->status,
+                    'status'     => $message->status ? 'Read'.$reply : '<span class="text-info">New</span>',
                     'action'     => '
                                         <a class="btn btn-xs btn-primary" style="float: left;"
                                            href="' . route('message.details',
                                             [session()->get('locale') ?? 'fas',$message->id]) . '" data-toggle="tooltip"
                                            data-placement="top">
-                                            <i class="cil-user" title="Display Message"></i>
+                                            <i class="cil-user-follow" title="Display Message"></i>
                                         </a>
-
-                                        <a class="btn btn-xs btn-primary" style="float: left;"
-                                           href="' . route('message.details',
-                                           [session()->get('locale') ?? 'fas',$message->id]) . '" data-toggle="tooltip"
-                                           data-placement="top">
-                                            <i class="cil-user" title="Display Message"></i>
-                                        </a>
-
                                          <a class="btn btn-xs btn-danger" style="float: left;" onclick="return confirm(\'Delete this record?\')"
                                            href="' . route('message.destroy',
                                                 [session()->get('locale') ?? 'fas', $message->id])
