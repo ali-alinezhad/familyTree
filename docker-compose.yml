@@ -23,17 +23,27 @@ services:
     networks:
       - laravel
 
+  adminer:
+    image: adminer:4.8.1
+    ports:
+      - "8888:8080"
+    depends_on:
+      - php
+    networks:
+      - laravel
+
   mysql:
     image: mysql:8.0.25
     environment:
-      - MYSQL_ROOT_PASSWORD=rootpasswd
-      - MYSQL_DATABASE=familyTree
-      - MYSQL_USER=user
-      - MYSQL_PASSWORD=userpasswd
-    volumes:
-      - ./data/mysql:/var/lib/mysql
+      MYSQL_ROOT_PASSWORD: "rootpasswd"
+      MYSQL_DATABASE: "familyTree"
+      MYSQL_USER: "user"
+      MYSQL_PASSWORD: "userpasswd"
+#    volumes:
+#      - ./data/mysql:/var/lib/mysql
+#      - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
     ports:
-      - 3306:3306
+      - "3306:3306"
     networks:
       - laravel
 
