@@ -14,8 +14,10 @@ use Illuminate\Support\Facades\Validator;
 class UsersController extends Controller
 {
 
-    protected const ADMIN = 1;
-    protected const PATH  = 'images/users/';
+    protected const ADMIN     = 0;
+    protected const ASSISTANT = 1;
+    protected const USER      = 2;
+    protected const PATH      = 'images/users/';
 
     /**
      * @var Helper
@@ -57,7 +59,8 @@ class UsersController extends Controller
         $currentUser = $this->helper->getCurrentUser();
 
         $user = ($username !== session()->get('user') && $currentUser
-            && $currentUser->role !== self::ADMIN)
+            && ($currentUser->role === self::USER)
+        )
             ? $currentUser
             : User::where('username', $username)->first();
 
@@ -214,8 +217,13 @@ class UsersController extends Controller
      */
     public function changeUserRole($locale, User $user)
     {
-        $user->role < 2 ? ($user->role = 2) : ($user->role = 1);
-        $user->save();
+        $currentUser = $this->helper->getCurrentUser();
+
+        // Just admin can change the role for others. nobody can change Admin permission even Admin
+        if ($user->role !== self::ADMIN && $currentUser->role === self::ADMIN) {
+            $user->role === self::ASSISTANT ? ($user->role = self::USER) : ($user->role = self::ASSISTANT);
+            $user->save();
+        }
 
         return redirect()->intended(route('users', [$locale]));
     }
@@ -297,12 +305,11 @@ class UsersController extends Controller
                     'english_name' => $user->english_name,
                     'persian_name' => $user->persian_name,
                     'status'       => $user->status,
-                    'role'         => '<button type="button" class="change-status-btn btn btn-xs btn-'
-                        . ($user->role === self::ADMIN ? 'danger' : 'success')
+                    'role'         => '<span class="text-'
+                        . ($user->role === self::ADMIN ? 'danger' : ($user->role === self::ASSISTANT ?'success' : 'info'))
                         . '" data-id="' . $user->id . '">
-                            ' . ($user->role === self::ADMIN ? 'Admin'
-                            : 'Assistant') . '
-                        </button>',
+                            ' . ($user->role === self::ADMIN ? 'Admin' : ($user->role === self::ASSISTANT ?'Assistant' : 'User')) . '
+                        </span>',
 
                     'action' =>
                         '
@@ -313,14 +320,21 @@ class UsersController extends Controller
                             <i class="cil-user" title=Admin></i>
                         </a>' .
 
-                        ($currentUser->role === self::ADMIN ? '
-                        <a class="btn btn-xs btn-success change-status-btn" style="float: left;"
+                        ($currentUser->role === self::ADMIN || $currentUser->role === self::ASSISTANT ? '
+                        <a class="btn btn-xs btn-'.
+                         ($user->role === self::ASSISTANT ? 'danger' : 'success').'
+                         change-status-btn"
                            href="' . route('users.role.change',
                                 [session()->get('locale') ?? 'fas', $user->id])
                             . '" data-toggle="tooltip"
-                           data-placement="top">
-                            <i class="cil-check" title=Admin></i>
-                        </a>
+                           data-placement="top" style="float: left;'.
+
+                            ($user->role === self::ADMIN || $currentUser->role !== self::ADMIN ? ' pointer-events: none' : '-') .'
+                            ">
+                            <i class="'.
+                            ($user->role === self::ADMIN ? 'cil-check' : 'cil-star').
+                                '"title="Permission"></i>
+
                         <a class="btn btn-xs btn-info" style="float: left;"
                            href="' . route('users.profile', [
                                 session()->get('locale') ?? 'fas',
@@ -329,6 +343,7 @@ class UsersController extends Controller
                            data-placement="top">
                             <i class="cil-pencil" title="Edit"></i>
                         </a>
+
                          <a class="btn btn-xs btn-danger" style="float: left;" onclick="return confirm(\'Delete this record?\')"
                            href="' . route('users.destroy',
                                 [session()->get('locale') ?? 'fas', $user->id])
