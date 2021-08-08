@@ -202,7 +202,7 @@ class MessageController extends Controller
                                            href="' . route('message.details',
                                             [session()->get('locale') ?? 'fas',$message->id]) . '" data-toggle="tooltip"
                                            data-placement="top">
-                                            <i class="cil-user-follow" title="Display Message"></i>
+                                            <i class="cil-envelope-closed" title="Display Message"></i>
                                         </a>
                                          <a class="btn btn-xs btn-danger" style="float: left;" onclick="return confirm(\'Delete this record?\')"
                                            href="' . route('message.destroy',

@@ -46,8 +46,19 @@
     {{ Form::close() }}
 </div>
 
-<img src="@if($profile && $profile['picture']){{ asset($profile['picture']) }}
-@else{{ asset('images/unknown.png') }}@endif" width="70" height="70"/>
+<img src="
+@if($profile && $profile['picture'])
+{{ asset($profile['picture']) }}
+@else
+{{ asset('images/unknown.png') }}
+@endif" width="70" height="70"/>
+
+@if($profile && $profile['picture'])
+<a href="{{ route('users.profile.delete.avatar',['lang' => $locale,'username'=> $user->username,'profile'=> $profile->id]) }}">
+    <i class="btn btn-danger cil-trash"></i>
+</a>
+@endif
+
 <div>
     {{ Form::open(['route'=>['users.profile.update',$locale,$user->id,$profile->id ?? null], 'method' => 'put', 'enctype'=>"multipart/form-data"]) }}
          <div id="accordion">

@@ -1,4 +1,4 @@
-@php $locale = session()->get('locale'); @endphp
+@php $locale = session()->get('locale') ?? 'fas'; @endphp
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
@@ -65,6 +65,14 @@
         </style>
     </head>
     <body>
+    <header>
+        <div>
+
+        </div>
+    </header>
+        <div>
+        <img src="{{asset('images/logo/logo.jpg')}}" height="300" width="1200">
+    </div>
         <div class="flex-center position-ref full-height">
             @if (Route::has('login'))
                 <div class="top-right links">
@@ -72,10 +80,6 @@
                         <a href="{{ url('/home') }}">Home</a>
                     @else
                         <a href="{{ route('login') }}">{{ __('translations.login') }}</a>
-
-                        @if (Route::has('register'))
-                            <a href="{{ route('register') }}">{{ __('translations.register') }}</a>
-                        @endif
                     @endauth
 
                     <ul class="c-header-nav">
@@ -83,7 +87,6 @@
                             <nav class="navbar navbar-expand navbar-dark">
                         <div class="collapse navbar-collapse" id="navbarToggler">
                             <ul class="navbar-nav ml-auto">
-                                @php $locale = session()->get('locale'); @endphp
                                 <li class="nav-item dropdown">
                                     <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>

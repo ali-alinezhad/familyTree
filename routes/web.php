@@ -39,12 +39,15 @@ Route::group(['middleware'=>'localization'],function () {
     // Users
     Route::get('/{lang}/users', 'UsersController@index')->name('users');
     Route::post('/users/get-datatable-data', 'UsersController@dataTablesData')->name('users.datatables.data');
-    Route::get('/{lang}/users/profile/edit/{username?}', 'UsersController@profileEdit')->name('users.profile');
-    Route::put('/{lang}/users/profile/{user}/update/{profile?}', 'UsersController@profileUpdate')->name('users.profile.update');
     Route::get('/{lang}/users/destroy/{user}', 'UsersController@destroy')->name('users.destroy');
     Route::put('/{lang}/users/info/update/{user}', 'UsersController@userInfoUpdate')->name('users.info.update');
     Route::get('/{lang}/users/role/change/{user}', 'UsersController@changeUserRole')->name('users.role.change');
     Route::get('/{lang}/users/details/{user}', 'UsersController@showDetails')->name('users.details');
+
+    // User Profile
+    Route::get('/{lang}/users/profile/edit/{username?}', 'UsersController@profileEdit')->name('users.profile');
+    Route::put('/{lang}/users/profile/{user}/update/{profile?}', 'UsersController@profileUpdate')->name('users.profile.update');
+    Route::get('/{lang}/users/profile/{username}/delete/avatar/{profile?}', 'UsersController@profileDeleteAvatar')->name('users.profile.delete.avatar');
 
     //Message
     Route::get('/{lang}/message/display/inbox', 'MessageController@index')->name('message.inbox');
