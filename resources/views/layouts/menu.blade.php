@@ -1,5 +1,7 @@
 @php
     $locale = session()->get('locale') ?? 'fas';
+    $username = session()->get('user');
+    $user = \App\User::where('username',$username)->first();
 @endphp
 <li class="c-sidebar-nav-item">
     <a class="c-sidebar-nav-link c-active" href="{{ route('home',['lang'=> $locale]) }}">
@@ -22,6 +24,13 @@
                 <i class="c-sidebar-nav-icon cil-puzzle"></i> Inbox
             </a>
         </li>
+        @if($user->role < 2)
+            <li class="c-sidebar-nav-item">
+                <a class="c-sidebar-nav-link" href="{{ route('register') }}">
+                    <i class="c-sidebar-nav-icon cil-puzzle"></i>{{ __('translations.register') }}
+                </a>
+            </li>
+        @endif
     </ul>
 </li>
 

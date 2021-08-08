@@ -1,5 +1,9 @@
 @php
 $username = session()->get('user');
+$user = \App\User::where('username',$username)->first();
+if($user){
+    $profile = \App\Model\Profile::where('user_id',$user->id)->first();
+}
 @endphp
 <button class="c-header-toggler c-class-toggler d-lg-none mfe-auto" type="button" data-target="#sidebar"
         data-class="c-sidebar-show">
@@ -62,7 +66,13 @@ $username = session()->get('user');
         <a class="c-header-nav-link" data-toggle="dropdown" href="#" role="button"
            aria-haspopup="true" aria-expanded="false">
             <div class="c-avatar">
-                <img class="c-avatar-img" src="{{asset('images/unknown.png')}}" alt="User">
+                <img class="c-avatar-img" src="
+                    @if($profile && $profile['picture'])
+                        {{asset($profile->picture)}}
+                    @else
+                        {{ asset('images/unknown.png') }}
+                    @endif
+                 " alt="User">
             </div>
         </a>
         <div class="dropdown-menu dropdown-menu-right pt-0">

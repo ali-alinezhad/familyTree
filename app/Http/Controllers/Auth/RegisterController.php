@@ -5,7 +5,10 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\User;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -38,7 +41,7 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest');
+      //  $this->middleware('guest');
     }
 
     /**
@@ -58,12 +61,13 @@ class RegisterController extends Controller
         ]);
     }
 
+
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param  array  $data
+     * @param array $data
      *
-     * @return \App\User
+     * @return \Illuminate\Http\RedirectResponse
      */
     protected function create(array $data)
     {
@@ -75,6 +79,23 @@ class RegisterController extends Controller
             'username'     => $userName,
             'password'     => Hash::make($data['password']),
         ]);
+    }
+
+
+    /**
+     * @param Request $request
+     *
+     * @return \Illuminate\Contracts\Foundation\Application|JsonResponse|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function register(Request $request)
+    {
+        $this->validator($request->all())->validate();
+        new Registered($this->create($request->all()));
+
+        return $request->wantsJson()
+            ? new JsonResponse([], 201)
+            : redirect($this->redirectPath());
     }
 
 

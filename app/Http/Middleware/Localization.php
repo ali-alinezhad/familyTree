@@ -16,6 +16,9 @@ class Localization
      */
     public function handle($request, Closure $next)
     {
+        if (session()->has('user')) {
+            session()->put('user', $request->user()->username);
+        }
         if (session()->has('locale')) {
             App::setlocale(session()->get('locale'));
         }

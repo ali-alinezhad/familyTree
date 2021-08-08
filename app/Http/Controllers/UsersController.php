@@ -6,6 +6,7 @@ use App\Http\Helpers\Helper;
 use App\Model\Messages;
 use App\Model\Profile;
 use App\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -41,9 +42,8 @@ class UsersController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index($locale, Request $request)
+    public function index($locale)
     {
-        session()->put('user', $request->user()->username);
         return view('users.home');
     }
 
@@ -78,7 +78,7 @@ class UsersController extends Controller
      * @param  Profile  $profile
      * @param  Request  $request
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function profileUpdate(
         string $locale,
@@ -148,7 +148,27 @@ class UsersController extends Controller
                 'burial_place'    => $request->get('burial_place')
             ]);
 
-        return redirect()->intended(route('home', [$locale]));
+        return redirect()->intended(route('users.profile', [$locale,$user->username]));
+    }
+
+
+    /**
+     * @param         $locale
+     * @param         $username
+     * @param Profile $profile
+     *
+     * @return RedirectResponse
+     */
+    public function profileDeleteAvatar($locale,$username,Profile $profile): RedirectResponse
+    {
+        if(file_exists($profile->picture)){
+            unlink($profile->picture);
+        }
+
+        $profile->picture = '';
+        $profile->save();
+
+        return redirect()->intended(route('users.profile', [$locale,$username]));
     }
 
 
@@ -157,7 +177,7 @@ class UsersController extends Controller
      * @param  Profile  $profile
      * @param  Request  $request
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function userInfoUpdate(
         string $locale,
@@ -183,7 +203,7 @@ class UsersController extends Controller
 
         $user->save();
 
-        return redirect()->intended(route('home', [$locale]));
+        return redirect()->intended(route('users.profile', [$locale,$user->username]));
     }
 
 
@@ -191,10 +211,10 @@ class UsersController extends Controller
      * @param $locale
      * @param  User  $user
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      * @throws \Exception
      */
-    public function destroy($locale, User $user)
+    public function destroy($locale, User $user): RedirectResponse
     {
         $profile = Profile::where('user_id', $user->id)->first();
 
@@ -213,9 +233,9 @@ class UsersController extends Controller
      * @param $locale
      * @param  User  $user
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
-    public function changeUserRole($locale, User $user)
+    public function changeUserRole($locale, User $user): RedirectResponse
     {
         $currentUser = $this->helper->getCurrentUser();
 
