@@ -2,74 +2,82 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container-fluid">
-    {{ Form::open(['route'=>['users.info.update',$locale,$user->id], 'method' => 'put']) }}
+    <div class="container-fluid">
+        {{ Form::open(['route'=>['users.info.update',$locale,$user->id], 'method' => 'put']) }}
         <div>
-        <div class="form-group">
-            <label for="english_name">{{ __('translations.english_name') }}</label>
-            <input type="text" name="english_name" class="form-control" id="english_name"
-                   value="@if($user) {{ $user['english_name'] }} @endif" required>
-            @error('english_name')
-            <div class="alert alert-danger">{{ $message }}</div>
-            @enderror
-        </div>
-
-        <div class="form-group">
-            <label for="persian_name">{{ __('translations.persian_name') }}</label>
-            <input type="text" name="persian_name" class="form-control" id="persian_name"
-                   value="@if($user) {{ $user['persian_name'] }} @endif" required>
-            @error('persian_name')
-            <div class="alert alert-danger">{{ $message }}</div>
-            @enderror
-        </div>
-
-        <div class="form-group">
-            <label for="password">{{ __('translations.password') }}</label>
-            <input type="password" name="password" class="form-control" id="password">
-
-            @error('password')
+            <div class="form-group">
+                <label for="english_name">{{ __('translations.english_name') }}</label>
+                <input type="text" name="english_name" class="form-control" id="english_name"
+                       value="@if($user) {{ $user['english_name'] }} @endif" required>
+                @error('english_name')
                 <div class="alert alert-danger">{{ $message }}</div>
-            @enderror
-        </div>
+                @enderror
+            </div>
 
-        <div class="form-group">
-            <label for="password_confirmation">{{ __('translations.password_confirmation') }}</label>
-            <input type="password" name="password_confirmation" class="form-control" id="password_confirmation">
-            @error('password_confirmation')
+            <div class="form-group">
+                <label for="persian_name">{{ __('translations.persian_name') }}</label>
+                <input type="text" name="persian_name" class="form-control" id="persian_name"
+                       value="@if($user) {{ $user['persian_name'] }} @endif" required>
+                @error('persian_name')
                 <div class="alert alert-danger">{{ $message }}</div>
-            @enderror
+                @enderror
+            </div>
+
+            <div class="form-group">
+                <label for="password">{{ __('translations.password') }}</label>
+                <input type="password" name="password" class="form-control" id="password">
+
+                @error('password')
+                <div class="alert alert-danger">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="form-group">
+                <label for="password_confirmation">{{ __('translations.password_confirmation') }}</label>
+                <input type="password" name="password_confirmation" class="form-control" id="password_confirmation">
+                @error('password_confirmation')
+                <div class="alert alert-danger">{{ $message }}</div>
+                @enderror
+            </div>
         </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary mb-2">{{ __('translations.submit') }}</button>
+        </div>
+        {{ Form::close() }}
     </div>
-    <div class="form-group">
-        <button type="submit" class="btn btn-primary mb-2">{{ __('translations.submit') }}</button>
-    </div>
-    {{ Form::close() }}
-</div>
 
-<img src="
-@if($profile && $profile['picture'])
-{{ asset($profile['picture']) }}
-@else
-{{ asset('images/unknown.png') }}
-@endif" width="70" height="70"/>
+    @if($profile && $profile['picture'])
+        <a href="{{ route('users.profile.delete.avatar',['lang' => $locale,'username'=> $user->username,'profile'=> $profile->id]) }}">
+            <i class="btn btn-danger cil-trash"></i>
+        </a>
+    @endif
 
-@if($profile && $profile['picture'])
-<a href="{{ route('users.profile.delete.avatar',['lang' => $locale,'username'=> $user->username,'profile'=> $profile->id]) }}">
-    <i class="btn btn-danger cil-trash"></i>
-</a>
-@endif
-
-<div>
-    {{ Form::open(['route'=>['users.profile.update',$locale,$user->id,$profile->id ?? null], 'method' => 'put', 'enctype'=>"multipart/form-data"]) }}
-         <div id="accordion">
+    <div>
+        {{ Form::open(['route'=>['users.profile.update',$locale,$user->id,$profile->id ?? null], 'method' => 'put', 'enctype'=>"multipart/form-data"]) }}
+        <div id="accordion">
             <h3>{{ __('translations.personal_information') }}</h3>
             <div>
+                <div class="form-group">
+                    <input type="file" name="picture" id="picture" onchange="readURL(this);">
+                    <img src="
+                        @if($profile && $profile['picture'])
+                            {{ asset($profile['picture']) }}
+                        @else
+                            {{ asset('images/unknown.png') }}
+                        @endif" width="100" height="100" id="image"
+                    />
+
+                    @error('picture')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+
                 <div class="form-group">
                     <label for="birthday">{{ __('translations.birthday') }}</label>
                     <input type="date" name="birthday" class="form-control" id="birthday"
                            value="@if($profile && $profile['birthday']){{ $profile['birthday']->format('Y-m-d') }}@endif">
                     @error('birthday')
-                        <div class="alert alert-danger">{{ $message }}</div>
+                    <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
                 </div>
 
@@ -78,7 +86,7 @@
                     <input type="text" name="birthday_place" class="form-control" id="birthday_place"
                            value="@if($profile) {{ $profile['birthday_place'] }} @endif">
                     @error('birthday_place')
-                        <div class="alert alert-danger">{{ $message }}</div>
+                    <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
                 </div>
 
@@ -88,7 +96,7 @@
                            value="@if($profile) {{ $profile['residence_place'] }} @endif">
 
                     @error('residence_place')
-                        <div class="alert alert-danger">{{ $message }}</div>
+                    <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
                 </div>
 
@@ -97,7 +105,7 @@
                     <input type="text" name="education" class="form-control" id="education"
                            value="@if($profile) {{ $profile['education'] }} @endif">
                     @error('education')
-                        <div class="alert alert-danger">{{ $message }}</div>
+                    <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
                 </div>
 
@@ -107,7 +115,7 @@
                            value="@if($profile) {{ $profile['job_title'] }} @endif">
 
                     @error('job_title')
-                        <div class="alert alert-danger">{{ $message }}</div>
+                    <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
                 </div>
 
@@ -117,7 +125,7 @@
                            value="@if($profile) {{ $profile['job_place'] }} @endif">
 
                     @error('job_place')
-                        <div class="alert alert-danger">{{ $message }}</div>
+                    <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
                 </div>
             </div>
@@ -130,7 +138,7 @@
                            value="@if($profile) {{ $profile['father_name'] }} @endif">
 
                     @error('father_name')
-                        <div class="alert alert-danger">{{ $message }}</div>
+                    <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
                 </div>
 
@@ -140,7 +148,7 @@
                            value="@if($profile) {{ $profile['mother_name'] }} @endif">
 
                     @error('mother_name')
-                        <div class="alert alert-danger">{{ $message }}</div>
+                    <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
                 </div>
 
@@ -150,7 +158,7 @@
                            value="@if($profile) {{ $profile['spouse_name'] }} @endif">
 
                     @error('spouse_name')
-                        <div class="alert alert-danger">{{ $message }}</div>
+                    <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
                 </div>
 
@@ -160,7 +168,7 @@
                            value="@if($profile) {{ $profile['marriage_date'] }} @endif">
 
                     @error('marriage_data')
-                        <div class="alert alert-danger">{{ $message }}</div>
+                    <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
                 </div>
 
@@ -170,7 +178,7 @@
                            value="@if($profile) {{ $profile['marriage_place'] }} @endif">
 
                     @error('marriage_place')
-                        <div class="alert alert-danger">{{ $message }}</div>
+                    <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
                 </div>
 
@@ -180,7 +188,7 @@
                            value="@if($profile) {{ $profile['children_number'] }} @endif">
 
                     @error('children_number')
-                        <div class="alert alert-danger">{{ $message }}</div>
+                    <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
                 </div>
             </div>
@@ -193,7 +201,7 @@
                            value="@if($profile) {{ $profile['titles'] }} @endif">
 
                     @error('titles')
-                        <div class="alert alert-danger">{{ $message }}</div>
+                    <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
                 </div>
 
@@ -202,7 +210,7 @@
                     <input type="text" name="telephone" class="form-control" id="telephone"
                            value="@if($profile) {{ $profile['telephone'] }} @endif">
                     @error('telephone')
-                        <div class="alert alert-danger">{{ $message }}</div>
+                    <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
                 </div>
 
@@ -212,16 +220,7 @@
                            value="@if($profile) {{ $profile['email'] }} @endif">
 
                     @error('email')
-                        <div class="alert alert-danger">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <div class="form-group">
-                    <label for="picture">{{ __('translations.picture') }}</label>
-                    <input type="file" name="picture" class="form-control" id="picture">
-
-                    @error('picture')
-                        <div class="alert alert-danger">{{ $message }}</div>
+                    <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
                 </div>
 
@@ -231,7 +230,7 @@
                            value="@if($profile && $profile['death_date']){{ $profile['death_date']->format('Y-m-d') }}@endif">
 
                     @error('death_date')
-                        <div class="alert alert-danger">{{ $message }}</div>
+                    <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
                 </div>
 
@@ -241,49 +240,59 @@
                            value="@if($profile) {{ $profile['death_place'] }} @endif">
 
                     @error('death_place')
-                        <div class="alert alert-danger">{{ $message }}</div>
+                    <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
                 </div>
 
                 <div class="form-group">
                     <label for="burial_place">{{ __('translations.burial_place') }}</label>
-                    <input type="text" name="burial_place" class="form-control" id="burial_place" value="@if($profile) {{ $profile['burial_place'] }} @endif">
+                    <input type="text" name="burial_place" class="form-control" id="burial_place"
+                           value="@if($profile) {{ $profile['burial_place'] }} @endif">
                     @error('burial_place')
                     <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
                 </div>
             </div>
 
-             <h3>{{ __('translations.about_me') }}</h3>
-             <div>
-                 <div class="form-group">
-                     <label for="about_me">{{ __('translations.about_me') }}</label>
-                     <textarea class="ckeditor form-control" name="about_me" id="my_ckeditor">
+            <h3>{{ __('translations.about_me') }}</h3>
+            <div>
+                <div class="form-group">
+                    <label for="about_me">{{ __('translations.about_me') }}</label>
+                    <textarea class="ckeditor form-control" name="about_me" id="my_ckeditor">
                          @if($profile) {{ $profile['about_me'] }} @endif
                      </textarea>
-                     @error('about_me')
-                        <div class="alert alert-danger">{{ $message }}</div>
-                     @enderror
-                 </div>
-             </div>
+                    @error('about_me')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+            </div>
         </div>
         <div class="pt-5">
             <button type="submit" class="btn btn-primary mb-2">{{ __('translations.submit') }}</button>
         </div>
-    {{ Form::close() }}
-</div>
+        {{ Form::close() }}
+    </div>
 @endsection
 
 @section('third_party_scripts')
-<script src="{{ asset('js/ckeditor/ckeditor.js') }}"></script>
+    <script src="{{ asset('js/ckeditor/ckeditor.js') }}"></script>
     <script type="text/javascript">
         $(document).ready(function () {
             CKEDITOR.replace('my_ckeditor');
         });
-    </script>
-    <script type="text/javascript">
+
         $(document).ready(function () {
             $("#accordion").accordion();
         })
+
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#image').attr('src', e.target.result);
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
     </script>
 @endsection

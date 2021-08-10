@@ -24,7 +24,7 @@
                 <i class="c-sidebar-nav-icon cil-puzzle"></i> Inbox
             </a>
         </li>
-        @if($user->role < 2)
+        @if($user && $user->role < 2)
             <li class="c-sidebar-nav-item">
                 <a class="c-sidebar-nav-link" href="{{ route('register') }}">
                     <i class="c-sidebar-nav-icon cil-puzzle"></i>{{ __('translations.register') }}
