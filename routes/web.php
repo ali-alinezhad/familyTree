@@ -30,6 +30,13 @@ Route::group(['middleware'=>'localization'],function () {
     // Gallery
     Route::get('/{lang}/gallery', 'GalleryController@index')->name('gallery');
 
+    Route::put('/{lang}/gallery/upload/{username?}', 'GalleryController@upload')->name('gallery.upload');
+
+    Route::get('/{lang}/gallery/{gallery}/edit', 'GalleryController@edit')->name('gallery.edit');
+    Route::put('/{lang}/gallery/{gallery}/update', 'GalleryController@update')->name('gallery.update');
+    Route::get('/{lang}/gallery/{gallery}/delete', 'GalleryController@delete')->name('gallery.delete');
+    Route::get('/{lang}/gallery/{gallery}/details', 'GalleryController@details')->name('gallery.details');
+
     // Tree
     Route::get('/{lang}/tree', 'TreeController@index')->name('tree');
 

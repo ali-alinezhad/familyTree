@@ -1,6 +1,6 @@
 @php
 $username = session()->get('user');
-$user = \App\User::where('username',$username)->first();
+$user     = \App\User::where('username',$username)->first();
 if($user){
     $profile = \App\Model\Profile::where('user_id',$user->id)->first();
 }
@@ -67,7 +67,7 @@ if($user){
            aria-haspopup="true" aria-expanded="false">
             <div class="c-avatar">
                 <img class="c-avatar-img" src="
-                    @if($profile && $profile['picture'])
+                    @if(isset($profile) && $profile['picture'])
                         {{asset($profile->picture)}}
                     @else
                         {{ asset('images/unknown.png') }}
