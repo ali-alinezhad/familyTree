@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Helpers\Helper;
 use App\Model\Gallery;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class GalleryController extends Controller
@@ -36,7 +37,7 @@ class GalleryController extends Controller
      */
     public function index(string $locale)
     {
-        $images = Gallery::all();
+        $images = DB::table('gallery')->paginate(8);
         return view('gallery.home', [
             'locale' => $locale,
             'user'   => $this->helper->getCurrentUser(),

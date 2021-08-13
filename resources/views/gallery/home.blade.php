@@ -110,8 +110,7 @@
             @endforeach
             <!-- End -->
             </div>
-            <div class="py-5 text-right"><a href="#" class="btn btn-dark px-5 py-3 text-uppercase">Show me more</a>
-            </div>
+            <div class="py-5 text-right"> {{ $images->onEachSide(5)->links() }}</div>
         </div>
     </div>
 @endsection
