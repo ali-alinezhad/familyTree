@@ -46,6 +46,12 @@ class GalleryController extends Controller
     }
 
 
+    /**
+     * @param Request $request
+     * @param string  $locale
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function upload(Request $request, string $locale)
     {
         $user      = $this->helper->getCurrentUser();
@@ -54,7 +60,7 @@ class GalleryController extends Controller
             'title'       => 'nullable|string',
             'description' => 'nullable|string',
             'status'      => 'nullable|string',
-            'picture'     => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:8192',
+            'picture'     => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:4096',
         ]);
 
         if ($validator->fails()) {
@@ -84,6 +90,12 @@ class GalleryController extends Controller
     }
 
 
+    /**
+     * @param string  $locale
+     * @param Gallery $gallery
+     *
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function edit(string $locale,Gallery $gallery)
     {
         return view('gallery.edit', [
@@ -95,6 +107,13 @@ class GalleryController extends Controller
     }
 
 
+    /**
+     * @param Request $request
+     * @param string  $locale
+     * @param Gallery $gallery
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function update(Request $request,string $locale,Gallery $gallery)
     {
         $user      = $this->helper->getCurrentUser();
@@ -128,6 +147,13 @@ class GalleryController extends Controller
     }
 
 
+    /**
+     * @param string  $locale
+     * @param Gallery $gallery
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Exception
+     */
     public function delete(string $locale,Gallery $gallery)
     {
         if(file_exists($gallery->pic)){
@@ -139,6 +165,13 @@ class GalleryController extends Controller
         return redirect()->intended(route('gallery', [$locale, $this->helper->getCurrentUser()]));
     }
 
+
+    /**
+     * @param string  $locale
+     * @param Gallery $gallery
+     *
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function details(string $locale,Gallery $gallery)
     {
         return view('gallery.details', [

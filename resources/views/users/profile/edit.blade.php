@@ -46,12 +46,6 @@
         {{ Form::close() }}
     </div>
 
-    @if($profile && $profile['picture'])
-        <a href="{{ route('users.profile.delete.avatar',['lang' => $locale,'username'=> $user->username,'profile'=> $profile->id]) }}">
-            <i class="btn btn-danger cil-trash"></i>
-        </a>
-    @endif
-
     <div>
         {{ Form::open(['route'=>['users.profile.update',$locale,$user->id,$profile->id ?? null], 'method' => 'put', 'enctype'=>"multipart/form-data"]) }}
         <div id="accordion">
@@ -67,8 +61,14 @@
                         @endif" width="100" height="100" id="image"
                     />
 
+                    @if($profile && $profile['picture'])
+                        <a href="{{ route('users.profile.delete.avatar',['lang' => $locale,'username'=> $user->username,'profile'=> $profile->id]) }}">
+                            <i class="btn text-danger cil-trash"></i>
+                        </a>
+                    @endif
+
                     @error('picture')
-                    <div class="alert alert-danger">{{ $message }}</div>
+                        <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
                 </div>
 
