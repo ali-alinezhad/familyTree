@@ -18,7 +18,7 @@ class CreateGalleryTable extends Migration
             $table->integer('user_id');
             $table->longText('title')->nullable();
             $table->longText('description')->nullable();
-            $table->string('pic')->default('image');
+            $table->string('pic')->default('images/unknown.png');
             $table->boolean('status')->default(false);
             $table->timestamps();
         });

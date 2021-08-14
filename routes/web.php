@@ -29,19 +29,20 @@ Route::group(['middleware'=>'localization'],function () {
 
     // Gallery
     Route::get('/{lang}/gallery', 'GalleryController@index')->name('gallery');
-
-    Route::put('/{lang}/gallery/upload/{username?}', 'GalleryController@upload')->name('gallery.upload');
-
+    Route::put('/{lang}/gallery/upload', 'GalleryController@upload')->name('gallery.upload');
     Route::get('/{lang}/gallery/{gallery}/edit', 'GalleryController@edit')->name('gallery.edit');
     Route::put('/{lang}/gallery/{gallery}/update', 'GalleryController@update')->name('gallery.update');
     Route::get('/{lang}/gallery/{gallery}/delete', 'GalleryController@delete')->name('gallery.delete');
     Route::get('/{lang}/gallery/{gallery}/details', 'GalleryController@details')->name('gallery.details');
 
-    // Tree
-    Route::get('/{lang}/tree', 'TreeController@index')->name('tree');
-
     // News
     Route::get('/{lang}/news', 'NewsController@index')->name('news');
+    Route::put('/{lang}/news/create', 'NewsController@create')->name('news.create');
+    Route::get('/{lang}/news/{news}/edit', 'NewsController@edit')->name('news.edit');
+    Route::put('/{lang}/news/{news}/update', 'NewsController@update')->name('news.update');
+    Route::get('/{lang}/news/{news}/delete', 'NewsController@delete')->name('news.delete');
+    Route::get('/{lang}/news/{news}/details', 'NewsController@details')->name('news.details');
+    Route::get('/{lang}/news/{news}/delete/image', 'NewsController@deleteImage')->name('news.delete.image');
 
     // Users
     Route::get('/{lang}/users', 'UsersController@index')->name('users');
@@ -64,5 +65,6 @@ Route::group(['middleware'=>'localization'],function () {
     Route::put('/{lang}/message/reply/{oldMessage}', 'MessageController@replyMessage')->name('message.reply');
     Route::get('/{lang}/message/destroy/{message}', 'MessageController@destroy')->name('message.destroy');
 
-
+    // Tree
+    Route::get('/{lang}/tree', 'TreeController@index')->name('tree');
 });
