@@ -67,4 +67,9 @@ Route::group(['middleware'=>'localization'],function () {
 
     // Tree
     Route::get('/{lang}/tree', 'TreeController@index')->name('tree');
+
+
+    Route::get('/{lang}/category','CategoryController@manageCategory');
+    Route::post('/addCategory','CategoryController@addCategory')->name('add.category');
+
 });
