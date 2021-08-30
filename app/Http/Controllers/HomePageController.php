@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class TreeController extends Controller
+class HomePageController extends Controller
 {
     /**
      * TreeController constructor.
@@ -23,6 +23,6 @@ class TreeController extends Controller
      */
     public function index($locale)
     {
-        return view('tree.home');
+        return view('homepage.home');
     }
 }

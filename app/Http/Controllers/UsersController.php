@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Helpers\Helper;
-use App\Model\Messages;
+use App\Model\Father;
 use App\Model\Profile;
 use App\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\MessageBag;
 
 
 class UsersController extends Controller
@@ -49,8 +50,8 @@ class UsersController extends Controller
 
 
     /**
-     * @param  string  $lang
-     * @param  string  $username
+     * @param string $lang
+     * @param string $username
      *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -66,25 +67,42 @@ class UsersController extends Controller
 
         $profile = Profile::where('user_id', $user->id)->first();
 
+        foreach (User::all() as $userAsFather) {
+            $father = Father::where('user_id', $userAsFather->id)->first();
+            if ($userAsFather->id !== $user->id) {
+                $fathers[] = $userAsFather;
+//                if ($father) {
+//                    if ($father->father_name !== $user->id) {
+//                        $fathers[] = $userAsFather;
+//                    }
+//                }
+//                else {
+//                    $fathers[] = $userAsFather;
+//                }
+            }
+        }
+
         return view('users.profile.edit', [
             'profile' => $profile,
-            'user'    => $user
+            'user'    => $user,
+            'fathers' => $fathers
         ]);
     }
 
 
     /**
-     * @param  string  $locale
-     * @param  Profile  $profile
-     * @param  Request  $request
+     * @param string  $locale
+     * @param Profile $profile
+     * @param Request $request
      *
      * @return RedirectResponse
      */
     public function profileUpdate(
-        string $locale,
-        User $user,
+        string  $locale,
+        User    $user,
         Profile $profile,
-        Request $request)
+        Request $request
+    )
     {
         $validator = Validator::make($request->all(), [
             'birthday'        => 'nullable|date',
@@ -93,7 +111,7 @@ class UsersController extends Controller
             'education'       => 'nullable|string|max:40',
             'job_title'       => 'nullable|string|max:50',
             'job_place'       => 'nullable|string|max:40',
-            'father_name'     => 'nullable|string|max:40',
+            'father_name'     => 'nullable|integer|max:40',
             'mother_name'     => 'nullable|string|max:40',
             'spouse_name'     => 'nullable|string|max:40',
             'marriage_date'   => 'nullable|date',
@@ -108,6 +126,24 @@ class UsersController extends Controller
             'death_place'     => 'nullable|string|max:40',
             'burial_place'    => 'nullable|string|max:40',
         ]);
+
+        $fatherId = $request->get('father_name');
+
+        $childs = Father::where('father_id',$user->id)->get();
+        $error = false;
+        foreach ($childs as $child) {
+            if ($child->user_id === (int)$fatherId) {
+                $error = true;
+                break;
+            }
+        }
+
+        if ($error) {
+            $validator->after(function($validator) {
+                $validator->errors()->add('father_name', 'This is your Son!');
+            });
+        }
+
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator->errors());
@@ -132,7 +168,7 @@ class UsersController extends Controller
                 'education'       => $request->get('education'),
                 'job_title'       => $request->get('job_title'),
                 'job_place'       => $request->get('job_place'),
-                'father_name'     => $request->get('father_name'),
+                'father_name'     => $fatherId,
                 'mother_name'     => $request->get('mother_name'),
                 'spouse_name'     => $request->get('spouse_name'),
                 'marriage_date'   => $request->get('marriage_date'),
@@ -146,9 +182,15 @@ class UsersController extends Controller
                 'death_date'      => $request->get('death_date'),
                 'death_place'     => $request->get('death_place'),
                 'burial_place'    => $request->get('burial_place')
-            ]);
+            ]
+        );
 
-        return redirect()->intended(route('users.profile', [$locale,$user->username]));
+        Father::updateOrCreate(['user_id' => $user->id], [
+            'user_id'   => $user->id,
+            'father_id' => $fatherId,
+        ]);
+
+        return redirect()->intended(route('users.profile', [$locale, $user->username]));
     }
 
 
@@ -159,30 +201,31 @@ class UsersController extends Controller
      *
      * @return RedirectResponse
      */
-    public function profileDeleteAvatar($locale,$username,Profile $profile): RedirectResponse
+    public function profileDeleteAvatar($locale, $username, Profile $profile): RedirectResponse
     {
-        if(file_exists($profile->picture)){
+        if (file_exists($profile->picture)) {
             unlink($profile->picture);
         }
 
         $profile->picture = '';
         $profile->save();
 
-        return redirect()->intended(route('users.profile', [$locale,$username]));
+        return redirect()->intended(route('users.profile', [$locale, $username]));
     }
 
 
     /**
-     * @param  string  $locale
-     * @param  Profile  $profile
-     * @param  Request  $request
+     * @param string  $locale
+     * @param Profile $profile
+     * @param Request $request
      *
      * @return RedirectResponse
      */
     public function userInfoUpdate(
-        string $locale,
-        User $user,
-        Request $request)
+        string  $locale,
+        User    $user,
+        Request $request
+    )
     {
         $validator = Validator::make($request->all(), [
             'english_name' => 'required|string|max:70',
@@ -203,13 +246,13 @@ class UsersController extends Controller
 
         $user->save();
 
-        return redirect()->intended(route('users.profile', [$locale,$user->username]));
+        return redirect()->intended(route('users.profile', [$locale, $user->username]));
     }
 
 
     /**
-     * @param $locale
-     * @param  User  $user
+     * @param      $locale
+     * @param User $user
      *
      * @return RedirectResponse
      * @throws \Exception
@@ -218,7 +261,7 @@ class UsersController extends Controller
     {
         $profile = Profile::where('user_id', $user->id)->first();
 
-        if(file_exists($profile->picture)){
+        if (file_exists($profile->picture)) {
             unlink($profile->picture);
         }
 
@@ -230,8 +273,8 @@ class UsersController extends Controller
 
 
     /**
-     * @param $locale
-     * @param  User  $user
+     * @param      $locale
+     * @param User $user
      *
      * @return RedirectResponse
      */
@@ -250,28 +293,29 @@ class UsersController extends Controller
 
 
     /**
-     * @param $locale
-     * @param  User  $user
+     * @param      $locale
+     * @param User $user
      *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function showDetails($locale, User $user)
     {
         $currentUser = $this->helper->getCurrentUser();
-
-        $profile = Profile::where('user_id', $user->id)->first();
+        $profile     = Profile::where('user_id', $user->id)->first();
+        $father      = User::where('id',$profile['father_name'])->first();
 
         return view('users.details', [
-            'profile'    => $profile,
-            'user'       => $user,
-            'isSameUser' => $currentUser->id === $user->id
+            'profile'     => $profile,
+            'user'        => $user,
+            'isSameUser'  => $currentUser->id === $user->id,
+            'fatherLinks' => $this->getFatherLinks($locale, $user, $profile),
+            'fatherName'  => $father->persian_name
         ]);
-
     }
 
 
     /**
-     * @param  Request  $request
+     * @param Request $request
      *
      * @return false|string
      */
@@ -302,7 +346,8 @@ class UsersController extends Controller
                 ->get();
 
             $totalFiltered = $totalData;
-        } else {
+        }
+        else {
             $search = $request->input('search.value');
 
             $users = $users->Where('persian_name', 'like', "%{$search}%")
@@ -326,34 +371,39 @@ class UsersController extends Controller
                     'persian_name' => $user->persian_name,
                     'status'       => $user->status,
                     'role'         => '<span class="text-'
-                        . ($user->role === self::ADMIN ? 'danger' : ($user->role === self::ASSISTANT ?'success' : 'info'))
+                        . ($user->role === self::ADMIN ? 'danger' : ($user->role === self::ASSISTANT ? 'success' : 'info'))
                         . '" data-id="' . $user->id . '">
-                            ' . ($user->role === self::ADMIN ? 'Admin' : ($user->role === self::ASSISTANT ?'Assistant' : 'User')) . '
+                            ' . ($user->role === self::ADMIN ? 'Admin' : ($user->role === self::ASSISTANT ? 'Assistant' : 'User'))
+                        . '
                         </span>',
 
                     'action' =>
                         '
                         <a class="btn btn-xs btn-primary" style="float: left;"
-                           href="' . route('users.details',
-                            [session()->get('locale') ?? 'fas', $user->id]) . '" data-toggle="tooltip"
+                           href="' . route(
+                            'users.details',
+                            [session()->get('locale') ?? 'fas', $user->id]
+                        ) . '" data-toggle="tooltip"
                            data-placement="top">
                             <i class="cil-user" title=Admin></i>
                         </a>' .
 
                         ($currentUser->role === self::ADMIN || $currentUser->role === self::ASSISTANT ? '
-                        <a class="btn btn-xs btn-'.
-                         ($user->role === self::ASSISTANT ? 'danger' : 'success').'
+                        <a class="btn btn-xs btn-' .
+                            ($user->role === self::ASSISTANT ? 'danger' : 'success') . '
                          change-status-btn"
-                           href="' . route('users.role.change',
-                                [session()->get('locale') ?? 'fas', $user->id])
+                           href="' . route(
+                                'users.role.change',
+                                [session()->get('locale') ?? 'fas', $user->id]
+                            )
                             . '" data-toggle="tooltip"
-                           data-placement="top" style="float: left;'.
+                           data-placement="top" style="float: left;' .
 
-                            ($user->role === self::ADMIN || $currentUser->role !== self::ADMIN ? ' pointer-events: none' : '-') .'
+                            ($user->role === self::ADMIN || $currentUser->role !== self::ADMIN ? ' pointer-events: none' : '-') . '
                             ">
-                            <i class="'.
-                            ($user->role === self::ADMIN ? 'cil-check' : 'cil-star').
-                                '"title="Permission"></i>
+                            <i class="' .
+                            ($user->role === self::ADMIN ? 'cil-check' : 'cil-star') .
+                            '"title="Permission"></i>
 
                         <a class="btn btn-xs btn-info" style="float: left;"
                            href="' . route('users.profile', [
@@ -365,8 +415,10 @@ class UsersController extends Controller
                         </a>
 
                          <a class="btn btn-xs btn-danger" style="float: left;" onclick="return confirm(\'Delete this record?\')"
-                           href="' . route('users.destroy',
-                                [session()->get('locale') ?? 'fas', $user->id])
+                           href="' . route(
+                                'users.destroy',
+                                [session()->get('locale') ?? 'fas', $user->id]
+                            )
                             . '" data-toggle="tooltip"
                            data-placement="top">
                             <i class="cil-trash" title="Delete"></i>
@@ -383,5 +435,30 @@ class UsersController extends Controller
         ];
 
         return json_encode($json_data);
+    }
+
+
+    /**
+     * @param              $locale
+     * @param User         $user
+     * @param Profile|null $profile
+     *
+     * @return array
+     */
+    private function getFatherLinks($locale, User $user, ?Profile $profile): array
+    {
+        $fatherLinks = [];
+        $number      = 0;
+
+        $fatherLinks[$user->persian_name] = route('users.details', [$locale, $user->id]);
+
+        while ($profile && $number < 5) {
+            $number++;
+            $fatherName                             = User::where('id', $profile->father_name)->first();
+            $fatherLinks[$fatherName->persian_name] = route('users.details', [$locale, $profile->father_name]);
+            $profile                                = Profile::where('user_id', $profile->father_name)->first();
+        }
+
+        return $fatherLinks;
     }
 }

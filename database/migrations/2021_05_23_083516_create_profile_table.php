@@ -22,7 +22,7 @@ class CreateProfileTable extends Migration
             $table->string('education')->nullable();
             $table->string('job_title')->nullable();
             $table->string('job_place')->nullable();
-            $table->string('father_name')->nullable();
+            $table->integer('father_name')->nullable();
             $table->string('mother_name')->nullable();
             $table->string('spouse_name')->nullable();
             $table->date('marriage_date')->nullable();

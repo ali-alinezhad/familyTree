@@ -55,10 +55,10 @@
                     <input type="file" name="picture" id="picture" onchange="readURL(this);">
                     <img src="
                         @if($profile && $profile['picture'])
-                            {{ asset($profile['picture']) }}
-                        @else
-                            {{ asset('images/unknown.png') }}
-                        @endif" width="100" height="100" id="image"
+                    {{ asset($profile['picture']) }}
+                    @else
+                    {{ asset('images/unknown.png') }}
+                    @endif" width="100" height="100" id="image"
                     />
 
                     @if($profile && $profile['picture'])
@@ -68,7 +68,7 @@
                     @endif
 
                     @error('picture')
-                        <div class="alert alert-danger">{{ $message }}</div>
+                    <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
                 </div>
 
@@ -133,9 +133,16 @@
             <h3>{{ __('translations.parent_information') }}</h3>
             <div>
                 <div class="form-group">
+
                     <label for="father_name">{{ __('translations.father_name') }}</label>
-                    <input type="text" name="father_name" class="form-control" id="father_name"
-                           value="@if($profile) {{ $profile['father_name'] }} @endif">
+                    <select name="father_name" class="form-control" id="father_name">
+                        <option></option>
+                        @foreach($fathers as $father)
+                            <option value="{{ $father->id }}" @if($profile && $profile['father_name'] ===  $father->id) selected @endif>
+                                {{ $father->persian_name }}
+                            </option>
+                        @endforeach
+                    </select>
 
                     @error('father_name')
                     <div class="alert alert-danger">{{ $message }}</div>

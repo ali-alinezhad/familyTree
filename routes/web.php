@@ -65,6 +65,6 @@ Route::group(['middleware'=>'localization'],function () {
     Route::put('/{lang}/message/reply/{oldMessage}', 'MessageController@replyMessage')->name('message.reply');
     Route::get('/{lang}/message/destroy/{message}', 'MessageController@destroy')->name('message.destroy');
 
-    // Tree
-    Route::get('/{lang}/tree', 'TreeController@index')->name('tree');
+    // HomePage
+    Route::get('/{lang}/homepage', 'HomePageController@index')->name('homepage');
 });
