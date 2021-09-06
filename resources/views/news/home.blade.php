@@ -2,73 +2,75 @@
 @section('content')
 <div class="container-fluid">
     <div class="px-lg-5">
-        <div class="row pb-5">
-            <button class="btn btn-outline-primary" data-toggle="modal" data-target="#insertNews">
-                Insert News <i class="cil-plus"></i>
-            </button>
-        </div>
-        <div id="insertNews" class="modal fade" role="dialog">
-            <div class="modal-dialog">
-                <!-- Modal content-->
-                <div class="modal-content">
-                    <div class="modal-header">
-                        Image
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        {{ Form::open(['route'=>['news.create',$locale], 'method' => 'put','enctype'=>"multipart/form-data"]) }}
-                        <div>
-                            <div class="form-group">
-                                <label for="subject">Title</label>
-                                <input type="text" name="title" class="form-control" id="title" required>
-                                @error('title')
-                                <div class="alert alert-danger">{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <div class="form-group">
-                                <label for="description">Description</label>
-                                <textarea class="ckeditor form-control" name="description"
-                                          id="my_ckeditor" required></textarea>
-                                @error('description')
-                                <div class="alert alert-danger">{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <div class="form-group">
-                                <label for="picture"></label>
-                                <input type="file" name="picture" onchange="readURL(this);" id="picture"
-                                       accept=".gif,.jpg,.jpeg,.png">
-
-                                @error('picture')
-                                <div class="alert alert-danger">{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <div class="form-group">
-                                <img src="" id="image">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="status">Status</label>
-                                <input type="checkbox" name="status" id="status">
-                                @error('status')
-                                <div class="alert alert-danger">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-primary mb-2">Upload</button>
-                        </div>
-                        {{ Form::close() }}
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    </div>
-                </div>
-
+        @if($user->role < 2)
+            <div class="row pb-5">
+                <button class="btn btn-outline-primary" data-toggle="modal" data-target="#insertNews">
+                    Insert News <i class="cil-plus"></i>
+                </button>
             </div>
-        </div>
+            <div id="insertNews" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            Image
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            {{ Form::open(['route'=>['news.create',$locale], 'method' => 'put','enctype'=>"multipart/form-data"]) }}
+                            <div>
+                                <div class="form-group">
+                                    <label for="subject">Title</label>
+                                    <input type="text" name="title" class="form-control" id="title" required>
+                                    @error('title')
+                                    <div class="alert alert-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="description">Description</label>
+                                    <textarea class="ckeditor form-control" name="description"
+                                              id="my_ckeditor" required></textarea>
+                                    @error('description')
+                                    <div class="alert alert-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="picture"></label>
+                                    <input type="file" name="picture" onchange="readURL(this);" id="picture"
+                                           accept=".gif,.jpg,.jpeg,.png">
+
+                                    @error('picture')
+                                    <div class="alert alert-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="form-group">
+                                    <img src="" id="image">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="status">Status</label>
+                                    <input type="checkbox" name="status" id="status">
+                                    @error('status')
+                                    <div class="alert alert-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary mb-2">Upload</button>
+                            </div>
+                            {{ Form::close() }}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        @endif
         <div class="row">
             @foreach($news as $item)
                 <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
