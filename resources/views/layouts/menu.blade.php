@@ -47,7 +47,7 @@
     </a>
 </li>
 <li class="c-sidebar-nav-item">
-    <a class="c-sidebar-nav-link c-active" href="{{ route('tree',['lang'=> $locale]) }}">
-        <i class="c-sidebar-nav-icon cil-list"></i>{{ __('translations.tree') }}
+    <a class="c-sidebar-nav-link c-active" href="{{ route('homepage',['lang'=> $locale]) }}">
+        <i class="c-sidebar-nav-icon cil-list"></i>{{ __('translations.homepage') }}
     </a>
 </li>

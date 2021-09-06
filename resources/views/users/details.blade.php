@@ -54,232 +54,395 @@
         .shadow-none {
             box-shadow: none !important;
         }
+
+
+        /*Now the CSS*/
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .tree ul {
+            padding-top: 20px;
+            position: relative;
+
+            transition: all 0.5s;
+            -webkit-transition: all 0.5s;
+            -moz-transition: all 0.5s;
+        }
+
+        .tree li {
+            float: left;
+            text-align: center;
+            list-style-type: none;
+            position: relative;
+            padding: 20px 5px 0 5px;
+
+            transition: all 0.5s;
+            -webkit-transition: all 0.5s;
+            -moz-transition: all 0.5s;
+        }
+
+        /*We will use ::before and ::after to draw the connectors*/
+
+        .tree li::before, .tree li::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 50%;
+            border-top: 1px solid #ccc;
+            width: 50%;
+            height: 20px;
+        }
+
+        .tree li::after {
+            right: auto;
+            left: 50%;
+            border-left: 1px solid #ccc;
+        }
+
+        /*We need to remove left-right connectors from elements without
+        any siblings*/
+        .tree li:only-child::after, .tree li:only-child::before {
+            display: none;
+        }
+
+        /*Remove space from the top of single children*/
+        .tree li:only-child {
+            padding-top: 0;
+        }
+
+        /*Remove left connector from first child and
+        right connector from last child*/
+        .tree li:first-child::before, .tree li:last-child::after {
+            border: 0 none;
+        }
+
+        /*Adding back the vertical connector to the last nodes*/
+        .tree li:last-child::before {
+            border-right: 1px solid #ccc;
+            border-radius: 0 5px 0 0;
+            -webkit-border-radius: 0 5px 0 0;
+            -moz-border-radius: 0 5px 0 0;
+        }
+
+        .tree li:first-child::after {
+            border-radius: 5px 0 0 0;
+            -webkit-border-radius: 5px 0 0 0;
+            -moz-border-radius: 5px 0 0 0;
+        }
+
+        /*Time to add downward connectors from parents*/
+        .tree ul ul::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            border-left: 1px solid #ccc;
+            width: 0;
+            height: 20px;
+        }
+
+        .tree li a {
+            border: 1px solid #ccc;
+            padding: 5px 10px;
+            text-decoration: none;
+            color: #666;
+            font-family: arial, verdana, tahoma;
+            font-size: 11px;
+            display: inline-block;
+
+            border-radius: 5px;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+
+            transition: all 0.5s;
+            -webkit-transition: all 0.5s;
+            -moz-transition: all 0.5s;
+        }
+
+        /*Time for some hover effects*/
+        /*We will apply the hover effect the the lineage of the element also*/
+        .tree li a:hover, .tree li a:hover + ul li a {
+            background: #c8e4f8;
+            color: #000;
+            border: 1px solid #94a0b4;
+        }
+
+        /*Connector styles on hover*/
+        .tree li a:hover + ul li::after,
+        .tree li a:hover + ul li::before,
+        .tree li a:hover + ul::before,
+        .tree li a:hover + ul ul::before {
+            border-color: #94a0b4;
+        }
+
+
     </style>
 @endsection
 @section('content')
-<div class="container">
-    @if($profile)
-        <div class="main-body">
-        <div class="row gutters-sm">
-            <div class="col-md-4 mb-3">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="d-flex flex-column align-items-center text-center">
-                            <img name="{{ $profile['picture'] }}" src="@if($profile['picture']){{ asset($profile['picture']) }}@else{{ asset('/images/unknown.png') }}@endif"
-                                 class="rounded-circle" width="200">
-                            <div class="mt-3">
-                                <h4>{{ $user['persian_name'] ?? '--' }}</h4>
-                                <p class="text-secondary mb-1">{{ $profile['birthday'] ?? '--' }}</p>
-                                <p class="text-muted font-size-sm">{{ $profile['birthday_place'] ?? '--' }}</p>
-                                @if(!$isSameUser)
-                                    <button class="btn btn-outline-primary" data-toggle="modal" data-target="#sendMessage">
-                                        Send a private message
-                                    </button>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card mt-3">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                            <h6 class="mb-0">
-                                Address
-                            </h6>
-                            <span class="text-secondary">{{ $profile['residence_place'] ?? '--' }}</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                            <h6 class="mb-0">
-                                Telephone
-                            </h6>
-                            <span class="text-secondary">{{ $profile['telephone'] ?? '--' }}</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                            <h6 class="mb-0">
-                                Email
-                            </h6>
-                            <span class="text-secondary">{{ $profile['email'] ?? '--' }}</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                            <h6 class="mb-0">
-                                Education
-                            </h6>
-                            <span class="text-secondary">{{ $profile['education'] ?? '--' }}</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                            <h6 class="mb-0">
-                                Job Title
-                            </h6>
-                            <span class="text-secondary">{{ $profile['job_title'] ?? '--' }}</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                            <h6 class="mb-0">
-                                Work place
-                            </h6>
-                            <span class="text-secondary">{{ $profile['job_place'] ?? '--' }}</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="col-md-8">
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <h6 class="mb-0">Title</h6>
-                            </div>
-                            <div class="col-sm-9 text-secondary">
-                                {{ $profile['titles'] ?? '--' }}
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <h6 class="mb-0">Father Name</h6>
-                            </div>
-                            <div class="col-sm-9 text-secondary">
-                                {{ $profile['father_name'] ?? '--' }}
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <h6 class="mb-0">Mother Name</h6>
-                            </div>
-                            <div class="col-sm-9 text-secondary">
-                                {{ $profile['mother_name'] ?? '--' }}
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <h6 class="mb-0">Spouse Name</h6>
-                            </div>
-                            <div class="col-sm-9 text-secondary">
-                                {{ $profile['spouse_name'] ?? '--' }}
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <h6 class="mb-0">Marriage Date</h6>
-                            </div>
-                            <div class="col-sm-9 text-secondary">
-                                {{ $profile['marriage_date'] ?? '--' }}
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <h6 class="mb-0">Place of Marriage</h6>
-                            </div>
-                            <div class="col-sm-9 text-secondary">
-                                {{ $profile['marriage_place'] ?? '--' }}
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <h6 class="mb-0">Children</h6>
-                            </div>
-                            <div class="col-sm-9 text-secondary">
-                                {{ $profile['children_number'] ?? '--' }}
-                            </div>
-                        </div>
-                        <hr>
-                    </div>
+    <div class="container">
+        @if($profile)
+            <div class="main-body">
+                <div class="pb-2">
+                    <button class="btn btn-outline-primary" data-toggle="modal" data-target="#displayTree">
+                        Tree <i class="cib-gumtree"></i>
+                    </button>
                 </div>
 
                 <div class="row gutters-sm">
-                    <div class="col-sm-6 mb-3">
-                        <div class="card h-100">
+                    <div class="col-md-5 mb-3">
+                        <div class="card">
                             <div class="card-body">
-                                <h6 class="mb-2">About Me</h6>
-                                <hr>
-                                <div class="row">
-                                    <div class="col text-justify">
-                                       @php echo $profile['about_me'] ?? '--' ; @endphp
+                                <div class="d-flex flex-column align-items-center text-center">
+                                    <img name="{{ $profile['picture'] }}"
+                                         src="@if($profile['picture']){{ asset($profile['picture']) }}@else{{ asset('/images/unknown.png') }}@endif"
+                                         class="rounded-circle" width="200" height="220">
+                                    <div class="mt-3">
+                                        <h4>{{ $user['persian_name'] ?? '--' }}</h4>
+                                        <p class="text-secondary mb-1">{{ $profile['birthday'] ?? '--' }}</p>
+                                        <p class="text-muted font-size-sm">{{ $profile['birthday_place'] ?? '--' }}</p>
+                                        @if(!$isSameUser)
+                                            <button class="btn btn-outline-primary" data-toggle="modal"
+                                                    data-target="#sendMessage">
+                                                Send a private message
+                                            </button>
+                                        @endif
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="card mt-3">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                    <h6 class="mb-0">
+                                        Address
+                                    </h6>
+                                    <span class="text-secondary">{{ $profile['residence_place'] ?? '--' }}</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                    <h6 class="mb-0">
+                                        Telephone
+                                    </h6>
+                                    <span class="text-secondary">{{ $profile['telephone'] ?? '--' }}</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                    <h6 class="mb-0">
+                                        Email
+                                    </h6>
+                                    <span class="text-secondary">{{ $profile['email'] ?? '--' }}</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                    <h6 class="mb-0">
+                                        Education
+                                    </h6>
+                                    <span class="text-secondary">{{ $profile['education'] ?? '--' }}</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                    <h6 class="mb-0">
+                                        Job Title
+                                    </h6>
+                                    <span class="text-secondary">{{ $profile['job_title'] ?? '--' }}</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                    <h6 class="mb-0">
+                                        Work place
+                                    </h6>
+                                    <span class="text-secondary">{{ $profile['job_place'] ?? '--' }}</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-7">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <h6 class="mb-0">Title</h6>
+                                    </div>
+                                    <div class="col-sm-9 text-secondary">
+                                        {{ $profile['titles'] ?? '--' }}
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <h6 class="mb-0">Father Name</h6>
+                                    </div>
+                                    <div class="col-sm-9 text-secondary">
+                                        {{ $fatherName ?? '--' }}
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <h6 class="mb-0">Mother Name</h6>
+                                    </div>
+                                    <div class="col-sm-9 text-secondary">
+                                        {{ $profile['mother_name'] ?? '--' }}
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <h6 class="mb-0">Spouse Name</h6>
+                                    </div>
+                                    <div class="col-sm-9 text-secondary">
+                                        {{ $profile['spouse_name'] ?? '--' }}
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <h6 class="mb-0">Marriage Date</h6>
+                                    </div>
+                                    <div class="col-sm-9 text-secondary">
+                                        {{ $profile['marriage_date'] ?? '--' }}
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <h6 class="mb-0">Place of Marriage</h6>
+                                    </div>
+                                    <div class="col-sm-9 text-secondary">
+                                        {{ $profile['marriage_place'] ?? '--' }}
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <h6 class="mb-0">Children</h6>
+                                    </div>
+                                    <div class="col-sm-9 text-secondary">
+                                        {{ $profile['children_number'] ?? '--' }}
+                                    </div>
+                                </div>
+                                <hr>
+                            </div>
+                        </div>
 
+                        <div class="row gutters-sm">
+                            <div class="col-sm-6 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h6 class="mb-2">About Me</h6>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col text-justify">
+                                                @php echo $profile['about_me'] ?? '--' ; @endphp
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <div class="card mt-3">
+                                            <ul class="list-group list-group-flush">
+                                                <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                                    <h6 class="mb-0">
+                                                        Date of Death
+                                                    </h6>
+                                                    <span
+                                                        class="text-secondary">{{ $profile['death_date'] ?? '--' }}</span>
+                                                </li>
+                                                <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                                    <h6 class="mb-0">
+                                                        Place of death
+                                                    </h6>
+                                                    <span
+                                                        class="text-secondary">{{ $profile['death_place'] ?? '--' }}</span>
+                                                </li>
+                                                <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                                    <h6 class="mb-0">
+                                                        Place of burial
+                                                    </h6>
+                                                    <span
+                                                        class="text-secondary">{{ $profile['burial_place'] ?? '--' }}</span>
+                                                </li>
+                                            </ul>
+                                        </div>
+
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-6 mb-3">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <div class="card mt-3">
-                                    <ul class="list-group list-group-flush">
-                                        <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                            <h6 class="mb-0">
-                                                Date of Death
-                                            </h6>
-                                            <span class="text-secondary">{{ $profile['death_date'] ?? '--' }}</span>
-                                        </li>
-                                        <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                            <h6 class="mb-0">
-                                                Place of death
-                                            </h6>
-                                            <span class="text-secondary">{{ $profile['death_place'] ?? '--' }}</span>
-                                        </li>
-                                        <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                            <h6 class="mb-0">
-                                                Place of burial
-                                            </h6>
-                                            <span class="text-secondary">{{ $profile['burial_place'] ?? '--' }}</span>
+                </div>
+            </div>
+            <div id="sendMessage" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            {{ Form::open(['route'=>['message.send',$locale,$user->id], 'method' => 'put']) }}
+                            <div>
+                                <div class="form-group">
+                                    <label for="subject">Subject</label>
+                                    <input type="text" name="subject" class="form-control" id="subject">
+                                    @error('subject')
+                                    <div class="alert alert-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="description">*Description</label>
+                                    <textarea type="text" name="description" class="form-control" id="description"
+                                              required></textarea>
+                                    @error('description')
+                                    <div class="alert alert-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary mb-2">Send</button>
+                            </div>
+                            {{ Form::close() }}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div id="displayTree" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            Tree
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="content-center">
+                                <div class="tree">
+                                    <ul>
+                                        <li>
+                                            @foreach(array_reverse($fatherLinks) as $name => $fatherLink)
+                                                <a href="{{ $fatherLink }}">{{ $name }}</a>
+                                                <ul>
+                                                    <li>
+                                                    </li>
+                                                </ul>
+                                            @endforeach
                                         </li>
                                     </ul>
                                 </div>
-
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        @else
+            <div class="text-center"> There is no detail information</div>
+        @endif
     </div>
-        <div id="sendMessage" class="modal fade" role="dialog">
-            <div class="modal-dialog">
-
-                <!-- Modal content-->
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        {{ Form::open(['route'=>['message.send',$locale,$user->id], 'method' => 'put']) }}
-                        <div>
-                            <div class="form-group">
-                                <label for="subject">Subject</label>
-                                <input type="text" name="subject" class="form-control" id="subject">
-                                @error('subject')
-                                    <div class="alert alert-danger">{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <div class="form-group">
-                                <label for="description">*Description</label>
-                                <textarea type="text" name="description" class="form-control" id="description" required></textarea>
-                                @error('description')
-                                <div class="alert alert-danger">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-primary mb-2">Send</button>
-                        </div>
-                        {{ Form::close() }}
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    @else
-        <div class="text-center"> There is no detail informations</div>
-    @endif
-</div>
 @endsection
 

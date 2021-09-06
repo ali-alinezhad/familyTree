@@ -4,7 +4,7 @@ return [
     'home'     => 'Home',
     'gallery'  => 'Gallery',
     'news'     => 'News',
-    'tree'     => 'Display Tree',
+    'homepage' => 'Home Page',
     'welcome'  => 'Welcome to our application!',
     'login'    => 'Login',
     'register' => 'Register',
