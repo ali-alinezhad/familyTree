@@ -10,7 +10,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\MessageBag;
 
 
 class UsersController extends Controller
@@ -68,17 +67,8 @@ class UsersController extends Controller
         $profile = Profile::where('user_id', $user->id)->first();
 
         foreach (User::all() as $userAsFather) {
-            $father = Father::where('user_id', $userAsFather->id)->first();
             if ($userAsFather->id !== $user->id) {
                 $fathers[] = $userAsFather;
-//                if ($father) {
-//                    if ($father->father_name !== $user->id) {
-//                        $fathers[] = $userAsFather;
-//                    }
-//                }
-//                else {
-//                    $fathers[] = $userAsFather;
-//                }
             }
         }
 
@@ -300,16 +290,20 @@ class UsersController extends Controller
      */
     public function showDetails($locale, User $user)
     {
+        $father      = null;
         $currentUser = $this->helper->getCurrentUser();
         $profile     = Profile::where('user_id', $user->id)->first();
-        $father      = User::where('id',$profile['father_name'])->first();
+
+        if ($profile) {
+            $father = User::where('id',$profile['father_name'])->first();
+        }
 
         return view('users.details', [
             'profile'     => $profile,
             'user'        => $user,
             'isSameUser'  => $currentUser->id === $user->id,
             'fatherLinks' => $this->getFatherLinks($locale, $user, $profile),
-            'fatherName'  => $father->persian_name
+            'fatherName'  => $father ? $father->persian_name : '--'
         ]);
     }
 

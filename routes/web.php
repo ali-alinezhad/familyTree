@@ -13,8 +13,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+//Route::get('/', function () {
+//    return view('welcome');
+//});
+Route::group([],function () {
+    Route::get('/', 'IndexController@index')->name('index.page');
+    Route::get('/{lang}/index', 'IndexController@index')->name('index');
 });
 
 Route::group(['middleware'=>'localization'],function () {
@@ -66,5 +70,8 @@ Route::group(['middleware'=>'localization'],function () {
     Route::get('/{lang}/message/destroy/{message}', 'MessageController@destroy')->name('message.destroy');
 
     // HomePage
-    Route::get('/{lang}/homepage', 'HomePageController@index')->name('homepage');
+    Route::get('/{lang}/homepage/edit', 'HomePageController@edit')->name('homepage.edit');
+    Route::put('/{lang}/homepage/update', 'HomePageController@update')->name('homepage.update');
+    Route::get('/{lang}/homepage/delete/logo', 'HomePageController@deleteLogo')->name('homepage.delete.logo');
+
 });
