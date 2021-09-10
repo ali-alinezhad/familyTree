@@ -48,6 +48,9 @@ return [
     'status'                => 'Status',
     'action'                => 'Action',
     'delete_confirmation'   => 'Are you sure?',
-    'about_me'              => 'About Me'
+    'about_me'              => 'About Me',
+    'about_us'              => 'About Us',
+    'header'                => 'Title and description',
+    'logo_music'            => 'Logo and Music',
 
 ];

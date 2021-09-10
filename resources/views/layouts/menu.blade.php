@@ -35,7 +35,6 @@
 </li>
 
 
-
 <li class="c-sidebar-nav-item">
     <a class="c-sidebar-nav-link c-active" href="{{ route('gallery',['lang'=> $locale]) }}">
         <i class="c-sidebar-nav-icon cil-image1"></i>{{ __('translations.gallery') }}
@@ -46,8 +45,10 @@
         <i class="c-sidebar-nav-icon cil-newspaper"></i>{{ __('translations.news') }}
     </a>
 </li>
+@if($user && $user->role < 2)
 <li class="c-sidebar-nav-item">
-    <a class="c-sidebar-nav-link c-active" href="{{ route('homepage',['lang'=> $locale]) }}">
-        <i class="c-sidebar-nav-icon cil-list"></i>{{ __('translations.homepage') }}
+    <a class="c-sidebar-nav-link" href="{{ route('homepage.edit',['lang'=> $locale]) }}">
+        <i class="c-sidebar-nav-icon cil-puzzle"></i>{{ __('translations.homepage') }}
     </a>
 </li>
+@endif

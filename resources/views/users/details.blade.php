@@ -270,7 +270,7 @@
                                         <h6 class="mb-0">Father Name</h6>
                                     </div>
                                     <div class="col-sm-9 text-secondary">
-                                        {{ $fatherName ?? '--' }}
+                                        {{ $fatherName }}
                                     </div>
                                 </div>
                                 <hr>
