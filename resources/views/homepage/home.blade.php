@@ -6,10 +6,11 @@
             <div class="col-md-6 pl-5">
                 <img src="{{ asset($homepage->logo) }}" height="500" width="100%" id="image">
 
-                <a href="{{ route('homepage.delete.logo',['lang' => $locale,'homepage'=> $homepage->id]) }}">
-                    <i class="btn text-danger cil-trash"></i>
-                </a>
-
+                @if($homepage->logo !== \App\Http\Controllers\HomePageController::LOGO_DEFAULT)
+                    <a href="{{ route('homepage.delete.logo',['lang' => $locale,'homepage'=> $homepage->id]) }}">
+                        <i class="btn text-danger cil-trash"></i>
+                    </a>
+                @endif
             </div>
             <div class="col-md-6 pr-5">
                 {{ Form::open(['route'=>['homepage.update',$locale], 'method' => 'put', 'enctype'=>"multipart/form-data"]) }}
@@ -42,11 +43,18 @@
 
                     <div class="form-group">
                         <label for="music">Music</label>
-                        <input type="file" name="music" id="music">
+                        <input type="file" name="music" id="music" onchange="readMusicURL(this);">
                         @error('music')
                         <div class="alert alert-danger">{{ $message }}</div>
                         @enderror
                     </div>
+
+                    <audio src="../../{{ $homepage->music }}" controls id="musicAudio"></audio>
+                    @if($homepage->music)
+                        <a href="{{ route('homepage.delete.music',['lang' => $locale]) }}">
+                            <i class="btn text-danger cil-trash"></i>
+                        </a>
+                    @endif
 
                     <div class="form-group">
                         <label for="subject">About Us Title</label>
@@ -87,9 +95,19 @@
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
                 reader.onload = function (e) {
-                    $('#logo').attr('src', e.target.result);
+                    $('#image').attr('src', e.target.result);
                 };
                 reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function readMusicURL(input) {
+            if (input.files && input.files[0]) {
+                var readerMusic = new FileReader();
+                readerMusic.onload = function (e) {
+                    $('#musicAudio').attr('src', e.target.result);
+                };
+                readerMusic.readAsDataURL(input.files[0]);
             }
         }
     </script>
