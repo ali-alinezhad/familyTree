@@ -73,5 +73,6 @@ Route::group(['middleware'=>'localization'],function () {
     Route::get('/{lang}/homepage/edit', 'HomePageController@edit')->name('homepage.edit');
     Route::put('/{lang}/homepage/update', 'HomePageController@update')->name('homepage.update');
     Route::get('/{lang}/homepage/delete/logo', 'HomePageController@deleteLogo')->name('homepage.delete.logo');
+    Route::get('/{lang}/homepage/delete/music', 'HomePageController@deleteMusic')->name('homepage.delete.music');
 
 });
