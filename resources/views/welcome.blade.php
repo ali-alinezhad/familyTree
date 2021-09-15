@@ -8,9 +8,19 @@
 </head>
 <body id="top">
 <style>
-    audio { width: 150px; display: block; margin:20px; }
-    audio:nth-child(2) { width: 250px; }
-    audio:nth-child(3) { width: 350px; }
+    audio {
+        width: 150px;
+        display: block;
+        margin: 20px;
+    }
+
+    audio:nth-child(2) {
+        width: 250px;
+    }
+
+    audio:nth-child(3) {
+        width: 350px;
+    }
 
 </style>
 <!-- Top Background Image Wrapper -->
@@ -46,77 +56,74 @@
         <!-- Gallery -->
         <section id="introblocks">
             <ul class="nospace group btmspace-80">
-                <li class="one_third first">
-                    <figure><a class="imgover" href="#"><img src="{{ asset('images/logo/logo.jpg') }}" alt=""></a>
-                        <figcaption>
-                            <h6 class="heading">Mollis suscipit</h6>
-                            <div>
-                                <p>Eu adipiscing sit amet ante donec vulputate magna duis posuere tellus vel fringilla
-                                    auctor nisi arcu.</p>
-                            </div>
-                        </figcaption>
-                    </figure>
-                </li>
-                <li class="one_third">
-                    <figure><a class="imgover" href="#"><img src="{{ asset('images/logo/logo.jpg') }}" alt=""></a>
-                        <figcaption>
-                            <h6 class="heading">Vestibulum maecenas</h6>
-                            <div>
-                                <p>Urna at congue lectus nisi ac neque suspendisse vitae sapien eu mi placerat tincidunt
-                                    sed eget elit in.</p>
-                            </div>
-                        </figcaption>
-                    </figure>
-                </li>
-                <li class="one_third">
-                    <figure><a class="imgover" href="#"><img src="{{ $homepage->logo }}"
-                                                             alt="{{ asset('images/logo/logo.jpg') }}"></a>
-                        <figcaption>
-                            <h6 class="heading">Pellentesque enim</h6>
-                            <div>
-                                <p>Imperdiet pede sit amet elit aenean sollicitudin eros quis cursus feugiat lacus diam
-                                    tempor tortor vel.</p>
-                            </div>
-                        </figcaption>
-                    </figure>
-                </li>
+                @if(!empty($pictures) &&  !stristr($_SERVER['HTTP_USER_AGENT'],'mobi'))
+                    @foreach($pictures as $key => $picture)
+                        <li class="one_third @if(!$key) first @endif">
+                            <figure><a class="imgover"><img src="{{ $picture->pic }}"
+                                                            alt="{{ asset('images/logo/logo.jpg') }}"
+                                                            style="width:350px ;height: 170px;!important;"></a>
+                                <figcaption>
+                                    <h6 class="heading">{{ $picture->title ?? '--' }}</h6>
+                                    <div>
+                                        <p></p>
+                                    </div>
+                                </figcaption>
+                            </figure>
+                        </li>
+                    @endforeach
+                @else
+                    <li class="one_third first">
+                        <figure><img src="{{ asset('images/logo/logo.jpg') }}">
+                            <figcaption>
+                                <h6 class="heading"></h6>
+                                <div>
+                                    <p></p>
+                                </div>
+                            </figcaption>
+                        </figure>
+                    </li>
+                @endif
             </ul>
         </section>
         <hr class="btmspace-80">
         <!-- News -->
         <section class="group" id="news">
-            <div class="one_half first"><img class="inspace-15 borderedbox" src="{{ asset('images/logo/logo.jpg') }}"
-                                             alt=""></div>
+            <div class="one_half first">
+                <img class="inspace-15 borderedbox" src="{{ asset('images/logo/logo.jpg') }}" alt="">
+            </div>
             <div class="one_half">
                 <ul class="nospace group inspace-15">
-                    <li class="one_half first btmspace-50">
-                        <article>
-                            <h6 class="heading"><a href="#">Posuere ultricies</a></h6>
-                            <p class="nospace">Sed tellus fusce velit orci aliquet et condimentum sit amet dapibus eget
-                                odio vivamus urna pellentesque felis&hellip;</p>
-                        </article>
                     </li>
-                    <li class="one_half btmspace-50">
-                        <article>
-                            <h6 class="heading"><a href="#">Pellentesque ipsum</a></h6>
-                            <p class="nospace">Ut quam imperdiet tincidunt vestibulum eget magna eget sem imperdiet
-                                tincidunt praesent sit amet adipiscing&hellip;</p>
-                        </article>
-                    </li>
-                    <li class="one_half first">
-                        <article>
-                            <h6 class="heading"><a href="#">Risus auctor vel</a></h6>
-                            <p class="nospace">Accumsan curabitur cursus porta lectus nam posuere orci in elementum
-                                molestie purus erat volutpat ullamcorper&hellip;</p>
-                        </article>
-                    </li>
-                    <li class="one_half">
-                        <article>
-                            <h6 class="heading"><a href="#">Volutpat vitae</a></h6>
-                            <p class="nospace">Elit purus non odio etiam dictum euismod lectus vestibulum tincidunt erat
-                                vel molestie gravida ligula lacus&hellip;</p>
-                        </article>
-                    </li>
+                    @foreach($newses as $key => $news)
+                        <li class="one_half @if(!($key % 2)) first @endif @if($key < 2) btmspace-50 @endif">
+                            <article>
+                                <h6 class="heading"><a href="#">
+                                        @php
+                                            $string = strip_tags($news->title);
+                                            if (strlen($string) > 30) {
+                                                $stringCut = substr($string, 0, 30);
+                                                $endPoint  = strrpos($stringCut, ' ');
+                                                $string    = $endPoint? substr($stringCut, 0, $endPoint) : substr($stringCut, 0);
+                                                $string   .= "...";
+                                            }
+                                            echo $string;
+                                        @endphp
+                                    </a></h6>
+                                <p class="nospace">
+                                    @php
+                                        $string = strip_tags($news->description);
+                                        if (strlen($string) > 40) {
+                                            $stringCut = substr($string, 0, 40);
+                                            $endPoint  = strrpos($stringCut, ' ');
+                                            $string    = $endPoint? substr($stringCut, 0, $endPoint) : substr($stringCut, 0);
+                                            $string   .= "...";
+                                        }
+                                        echo $string;
+                                    @endphp
+                                </p>
+                            </article>
+                        </li>
+                    @endforeach
                 </ul>
             </div>
         </section>

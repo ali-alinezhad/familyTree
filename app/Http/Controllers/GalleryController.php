@@ -121,7 +121,7 @@ class GalleryController extends Controller
             'title'       => 'nullable|string',
             'description' => 'nullable|string',
             'status'      => 'nullable|string',
-            'picture'     => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:8192',
+            'picture'     => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:8192',
         ]);
 
         if ($validator->fails()) {
