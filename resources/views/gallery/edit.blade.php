@@ -11,7 +11,8 @@
                 <div>
                     <div class="form-group">
                         <label for="subject">Title</label>
-                        <input type="text" name="title" class="form-control" id="title" value="{{ $image->title }}">
+                        <input type="text" name="title" class="form-control" id="title" value="{{ $image->title }}"
+                              @if($locale === 'fas') dir="rtl" @endif>
                         @error('title')
                         <div class="alert alert-danger">{{ $message }}</div>
                         @enderror
