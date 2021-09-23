@@ -16,7 +16,7 @@
                 <div>
                     <div class="form-group">
                         <label for="subject">Title</label>
-                        <input type="text" name="title" class="form-control" id="title" value="{{ $news->title }}" required>
+                        <input type="text" name="title" class="form-control" id="title" value="{{ $news->title }}" dir="rtl" required>
                         @error('title')
                             <div class="alert alert-danger">{{ $message }}</div>
                         @enderror

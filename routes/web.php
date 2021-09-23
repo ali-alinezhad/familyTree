@@ -16,12 +16,17 @@ use Illuminate\Support\Facades\Route;
 //Route::get('/', function () {
 //    return view('welcome');
 //});
-Route::group([],function () {
+Route::group([], function () {
     Route::get('/', 'IndexController@index')->name('index.page');
     Route::get('/{lang}/index', 'IndexController@index')->name('index');
+    Route::get('/{lang}/index/news', 'IndexController@showNews')->name('index.news.show');
+    Route::get('/{lang}/index/news/{news}/details', 'IndexController@showNewsDetails')->name('index.news.details');
+    Route::get('/{lang}/index/gallery', 'IndexController@ShowGallery')->name('index.gallery.show');
+    Route::get('/{lang}/index/gallery/{gallery}/details', 'IndexController@ShowImageDetails')->name('index.gallery.details');
+    Route::get('/{lang}/index/about_us', 'IndexController@showAboutUsWithDetails')->name('index.about_us');
 });
 
-Route::group(['middleware'=>'localization'],function () {
+Route::group(['middleware' => 'localization'], function () {
     Auth::routes();
     Route::get('/{lang}/home', 'LocalizationController@index')->name('locale');
     Route::get('/home', 'HomeController@index')->name('home');
@@ -59,7 +64,9 @@ Route::group(['middleware'=>'localization'],function () {
     // User Profile
     Route::get('/{lang}/users/profile/edit/{username?}', 'UsersController@profileEdit')->name('users.profile');
     Route::put('/{lang}/users/profile/{user}/update/{profile?}', 'UsersController@profileUpdate')->name('users.profile.update');
-    Route::get('/{lang}/users/profile/{username}/delete/avatar/{profile?}', 'UsersController@profileDeleteAvatar')->name('users.profile.delete.avatar');
+    Route::get('/{lang}/users/profile/{username}/delete/avatar/{profile?}', 'UsersController@profileDeleteAvatar')->name(
+        'users.profile.delete.avatar'
+    );
 
     //Message
     Route::get('/{lang}/message/display/inbox', 'MessageController@index')->name('message.inbox');
