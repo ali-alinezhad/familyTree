@@ -42,7 +42,7 @@
                     <li><a href="{{ route('login') }}">Login</a></li>
                 </ul>
             </nav>
-            <audio class="text-center" src="{{ $homepage->music }}" controls style=" width: 200px;"></audio>
+            <audio class="text-center" src="{{ asset($homepage->music) }}" style=" width: 200px;" controls loop autoplay></audio>
         </header>
     </div>
 
