@@ -16,16 +16,16 @@
                 {{ Form::open(['route'=>['homepage.update',$locale], 'method' => 'put', 'enctype'=>"multipart/form-data"]) }}
                 <div>
                     <div class="form-group">
-                        <label for="subject">Title</label>
+                        <label for="subject">{{ __('translations.header_title') }}</label>
                         <input type="text" name="header_title" class="form-control" id="header_title"
-                               value="{{ $homepage->header_title }}">
+                               value="{{ $homepage->header_title }}" @if(session()->get('locale') ==='fas')dir="rtl"@endif>
                         @error('header_title')
                         <div class="alert alert-danger">{{ $message }}</div>
                         @enderror
                     </div>
 
                     <div class="form-group">
-                        <label for="header_des">Description</label>
+                        <label for="header_des">{{ __('translations.header_description') }}</label>
                         <textarea class="ckeditor form-control" name="header_des"
                                   id="header_des">{{ $homepage->header_des }}</textarea>
                         @error('header_des')
@@ -34,7 +34,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="logo">Logo</label>
+                        <label for="logo">{{ __('translations.logo') }}</label>
                         <input type="file" name="logo" id="logo" onchange="readURL(this);">
                         @error('logo')
                         <div class="alert alert-danger">{{ $message }}</div>
@@ -42,14 +42,14 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="music">Music</label>
+                        <label for="music">{{ __('translations.music') }}</label>
                         <input type="file" name="music" id="music" onchange="readMusicURL(this);">
                         @error('music')
                         <div class="alert alert-danger">{{ $message }}</div>
                         @enderror
                     </div>
 
-                    <audio src="../../{{ $homepage->music }}" controls id="musicAudio"></audio>
+                    <audio src="../../{{ $homepage->music }}" controls id="musicAudio" style="width: 250px;"></audio>
                     @if($homepage->music)
                         <a href="{{ route('homepage.delete.music',['lang' => $locale]) }}">
                             <i class="btn text-danger cil-trash"></i>
@@ -57,7 +57,7 @@
                     @endif
 
                     <div class="form-group">
-                        <label for="subject">About Us Title</label>
+                        <label for="subject">{{ __('translations.about_us_title') }}</label>
                         <input type="text" name="about_us_title" class="form-control" id="about_us_title"
                                value="{{ $homepage->about_us_title }}">
                         @error('about_us_title')
@@ -66,7 +66,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="about_us_des">About Us Description</label>
+                        <label for="about_us_des">{{ __('translations.about_us_description') }}</label>
                         <textarea class="ckeditor form-control" name="about_us_des"
                                   id="about_us_des">{{ $homepage->about_us_des }}</textarea>
                         @error('about_us_des')
@@ -75,7 +75,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-primary mb-2">Upload</button>
+                    <button type="submit" class="btn btn-primary mb-2">{{ __('translations.upload') }}</button>
                 </div>
                 {{ Form::close() }}
             </div>

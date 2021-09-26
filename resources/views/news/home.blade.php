@@ -5,7 +5,7 @@
             @if($user->role < 2)
                 <div class="row pb-5">
                     <button class="btn btn-outline-primary" data-toggle="modal" data-target="#insertNews">
-                        Insert News <i class="cil-plus"></i>
+                        {{ __('translations.insert_news') }} <i class="cil-plus"></i>
                     </button>
                 </div>
                 <div id="insertNews" class="modal fade" role="dialog">
@@ -13,14 +13,14 @@
                         <!-- Modal content-->
                         <div class="modal-content">
                             <div class="modal-header">
-                                Image
+
                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                             </div>
                             <div class="modal-body">
                                 {{ Form::open(['route'=>['news.create',$locale], 'method' => 'put','enctype'=>"multipart/form-data"]) }}
                                 <div>
                                     <div class="form-group">
-                                        <label for="subject">Title</label>
+                                        <label for="subject">{{ __('translations.titles') }}</label>
                                         <input type="text" name="title" class="form-control" id="title" required>
                                         @error('title')
                                         <div class="alert alert-danger">{{ $message }}</div>
@@ -28,7 +28,7 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="description">Description</label>
+                                        <label for="description"></label>
                                         <textarea class="ckeditor form-control" name="description"
                                                   id="my_ckeditor" required></textarea>
                                         @error('description')
@@ -51,7 +51,7 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="status">Status</label>
+                                        <label for="status">{{ __('translations.display_other') }}</label>
                                         <input type="checkbox" name="status" id="status">
                                         @error('status')
                                         <div class="alert alert-danger">{{ $message }}</div>
@@ -59,12 +59,12 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <button type="submit" class="btn btn-primary mb-2">Upload</button>
+                                    <button type="submit" class="btn btn-primary mb-2">{{ __('translations.upload') }}</button>
                                 </div>
                                 {{ Form::close() }}
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">{{ __('translations.close') }}</button>
                             </div>
                         </div>
 
@@ -84,13 +84,13 @@
                             <div class="text-dark p-3">
                                 @php
                                     $string = strip_tags($item->title);
-                                    if (strlen($string) > 30) {
-                                        $stringCut = substr($string, 0, 30);
+                                    if (strlen($string) > 25) {
+                                        $stringCut = substr($string, 0, 25);
                                         $endPoint  = strrpos($stringCut, ' ');
                                         $string    = $endPoint? substr($stringCut, 0, $endPoint) : substr($stringCut, 0);
                                         $string   .= "...";
                                     }
-                                    echo $string;
+                                    echo strlen($string) ? $string : '--';
                                 @endphp
                             </div>
                             <div class="text-black-50 p-3">

@@ -186,7 +186,7 @@
             <div class="main-body">
                 <div class="pb-2">
                     <button class="btn btn-outline-primary" data-toggle="modal" data-target="#displayTree">
-                        Tree <i class="cib-gumtree"></i>
+                        {{ __('translations.tree') }} <i class="cib-gumtree"></i>
                     </button>
                 </div>
 
@@ -205,7 +205,7 @@
                                         @if(!$isSameUser)
                                             <button class="btn btn-outline-primary" data-toggle="modal"
                                                     data-target="#sendMessage">
-                                                Send a private message
+                                                {{ __('translations.send_private_message') }}
                                             </button>
                                         @endif
                                     </div>
@@ -216,37 +216,37 @@
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                                     <h6 class="mb-0">
-                                        Address
+                                        {{ __('translations.address') }}
                                     </h6>
                                     <span class="text-secondary">{{ $profile['residence_place'] ?? '--' }}</span>
                                 </li>
                                 <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                                     <h6 class="mb-0">
-                                        Telephone
+                                        {{ __('translations.telephone') }}
                                     </h6>
                                     <span class="text-secondary">{{ $profile['telephone'] ?? '--' }}</span>
                                 </li>
                                 <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                                     <h6 class="mb-0">
-                                        Email
+                                        {{ __('translations.email') }}
                                     </h6>
                                     <span class="text-secondary">{{ $profile['email'] ?? '--' }}</span>
                                 </li>
                                 <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                                     <h6 class="mb-0">
-                                        Education
+                                        {{ __('translations.education') }}
                                     </h6>
                                     <span class="text-secondary">{{ $profile['education'] ?? '--' }}</span>
                                 </li>
                                 <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                                     <h6 class="mb-0">
-                                        Job Title
+                                        {{ __('translations.job_title') }}
                                     </h6>
                                     <span class="text-secondary">{{ $profile['job_title'] ?? '--' }}</span>
                                 </li>
                                 <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                                     <h6 class="mb-0">
-                                        Work place
+                                        {{ __('translations.job_place') }}
                                     </h6>
                                     <span class="text-secondary">{{ $profile['job_place'] ?? '--' }}</span>
                                 </li>
@@ -258,7 +258,7 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-sm-3">
-                                        <h6 class="mb-0">Title</h6>
+                                        <h6 class="mb-0"> {{ __('translations.titles') }}</h6>
                                     </div>
                                     <div class="col-sm-9 text-secondary">
                                         {{ $profile['titles'] ?? '--' }}
@@ -267,7 +267,7 @@
                                 <hr>
                                 <div class="row">
                                     <div class="col-sm-3">
-                                        <h6 class="mb-0">Father Name</h6>
+                                        <h6 class="mb-0"> {{ __('translations.father_name') }}</h6>
                                     </div>
                                     <div class="col-sm-9 text-secondary">
                                         {{ $fatherName }}
@@ -276,7 +276,7 @@
                                 <hr>
                                 <div class="row">
                                     <div class="col-sm-3">
-                                        <h6 class="mb-0">Mother Name</h6>
+                                        <h6 class="mb-0"> {{ __('translations.mother_name') }}</h6>
                                     </div>
                                     <div class="col-sm-9 text-secondary">
                                         {{ $profile['mother_name'] ?? '--' }}
@@ -285,7 +285,7 @@
                                 <hr>
                                 <div class="row">
                                     <div class="col-sm-3">
-                                        <h6 class="mb-0">Spouse Name</h6>
+                                        <h6 class="mb-0"> {{ __('translations.spouse_name') }}</h6>
                                     </div>
                                     <div class="col-sm-9 text-secondary">
                                         {{ $profile['spouse_name'] ?? '--' }}
@@ -294,7 +294,7 @@
                                 <hr>
                                 <div class="row">
                                     <div class="col-sm-3">
-                                        <h6 class="mb-0">Marriage Date</h6>
+                                        <h6 class="mb-0"> {{ __('translations.marriage_date') }}</h6>
                                     </div>
                                     <div class="col-sm-9 text-secondary">
                                         {{ $profile['marriage_date'] ?? '--' }}
@@ -303,7 +303,7 @@
                                 <hr>
                                 <div class="row">
                                     <div class="col-sm-3">
-                                        <h6 class="mb-0">Place of Marriage</h6>
+                                        <h6 class="mb-0"> {{ __('translations.marriage_place') }}</h6>
                                     </div>
                                     <div class="col-sm-9 text-secondary">
                                         {{ $profile['marriage_place'] ?? '--' }}
@@ -312,7 +312,7 @@
                                 <hr>
                                 <div class="row">
                                     <div class="col-sm-3">
-                                        <h6 class="mb-0">Children</h6>
+                                        <h6 class="mb-0">{{ __('translations.children_number') }}</h6>
                                     </div>
                                     <div class="col-sm-9 text-secondary">
                                         {{ $profile['children_number'] ?? '--' }}
@@ -326,7 +326,7 @@
                             <div class="col-sm-6 mb-3">
                                 <div class="card h-100">
                                     <div class="card-body">
-                                        <h6 class="mb-2">About Me</h6>
+                                        <h6 class="mb-2">{{ __('translations.about_me') }}</h6>
                                         <hr>
                                         <div class="row">
                                             <div class="col text-justify">
@@ -344,21 +344,21 @@
                                             <ul class="list-group list-group-flush">
                                                 <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                                                     <h6 class="mb-0">
-                                                        Date of Death
+                                                        {{ __('translations.date_time') }}
                                                     </h6>
                                                     <span
                                                         class="text-secondary">{{ $profile['death_date'] ?? '--' }}</span>
                                                 </li>
                                                 <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                                                     <h6 class="mb-0">
-                                                        Place of death
+                                                        {{ __('translations.death_place') }}
                                                     </h6>
                                                     <span
                                                         class="text-secondary">{{ $profile['death_place'] ?? '--' }}</span>
                                                 </li>
                                                 <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                                                     <h6 class="mb-0">
-                                                        Place of burial
+                                                        {{ __('translations.burial_place') }}
                                                     </h6>
                                                     <span
                                                         class="text-secondary">{{ $profile['burial_place'] ?? '--' }}</span>
@@ -384,7 +384,7 @@
                             {{ Form::open(['route'=>['message.send',$locale,$user->id], 'method' => 'put']) }}
                             <div>
                                 <div class="form-group">
-                                    <label for="subject">Subject</label>
+                                    <label for="subject">{{ __('translations.message_subject') }}</label>
                                     <input type="text" name="subject" class="form-control" id="subject">
                                     @error('subject')
                                     <div class="alert alert-danger">{{ $message }}</div>
@@ -392,7 +392,7 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="description">*Description</label>
+                                    <label for="description">*{{ __('translations.description') }}</label>
                                     <textarea type="text" name="description" class="form-control" id="description"
                                               required></textarea>
                                     @error('description')
@@ -401,12 +401,12 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <button type="submit" class="btn btn-primary mb-2">Send</button>
+                                <button type="submit" class="btn btn-primary mb-2">{{ __('translations.send') }}</button>
                             </div>
                             {{ Form::close() }}
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">{{ __('translations.close') }}</button>
                         </div>
                     </div>
 
@@ -417,7 +417,7 @@
                     <!-- Modal content-->
                     <div class="modal-content">
                         <div class="modal-header">
-                            Tree
+                            {{ __('translations.tree') }}
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                         </div>
                         <div class="modal-body">
@@ -441,7 +441,7 @@
                 </div>
             </div>
         @else
-            <div class="text-center"> There is no detail information</div>
+            <div class="text-center"> {{ __('translations.no_details') }}</div>
         @endif
     </div>
 @endsection

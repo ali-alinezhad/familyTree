@@ -2,10 +2,6 @@
 
 @section('content')
     <div class="container-fluid">
-        <h1 class="text-black-50"> Inbox </h1>
-    </div>
-
-    <div class="container-fluid">
         <div class="row pull-left" style="margin-bottom: 15px;">
 
         </div>
@@ -13,10 +9,10 @@
                width="100%">
             <thead>
             <tr>
-                <th>Message Sender</th>
-                <th>Subject</th>
-                <th>Date and Time</th>
-                <th>Status</th>
+                <th>{{ __('translations.message_sender') }}</th>
+                <th>{{ __('translations.message_subject') }}</th>
+                <th>{{ __('translations.date_time') }}</th>
+                <th>{{ __('translations.status') }}</th>
                 <th>{{ __('translations.action') }}</th>
             </tr>
             </thead>

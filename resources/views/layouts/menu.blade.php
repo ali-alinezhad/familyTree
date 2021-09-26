@@ -21,7 +21,7 @@
         </li>
         <li class="c-sidebar-nav-item">
             <a class="c-sidebar-nav-link" href="{{ route('message.inbox',['lang'=> $locale]) }}">
-                <i class="c-sidebar-nav-icon cil-puzzle"></i> Inbox
+                <i class="c-sidebar-nav-icon cil-puzzle"></i> {{ __('translations.inbox') }}
             </a>
         </li>
         @if($user && $user->role < 2)

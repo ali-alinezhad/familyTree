@@ -30,30 +30,30 @@ if($user){
                             @switch($locale)
                                 @case('en')
                                 <div class="c-avatar">
-                                    <img class="c-avatar-img" src="{{asset('images/cif-us.svg')}}"> English
+                                    <img class="c-avatar" src="{{asset('images/cif-us.svg')}}"> English
                                 </div>
                                 @break
                                 @case('fas')
                                 <div class="c-avatar">
-                                    <img class="c-avatar-img" src="{{asset('images/cif-ir.svg')}}"> Farsi
+                                    <img class="c-avatar" src="{{asset('images/cif-ir.svg')}}"> Farsi
                                 </div>
                                 @break
                                 @default
                                 <div class="c-avatar">
-                                    <img class="c-avatar-img" src="{{asset('images/cif-us.svg')}}"> English
+                                    <img class="c-avatar" src="{{asset('images/cif-ir.svg')}}"> Farsi
                                 </div>
                             @endswitch
                             <span class="caret"></span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="/en">
-                                <div class="c-avatar">
-                                    <img class="c-avatar-img" src="{{asset('images/cif-us.svg')}}"> English
-                                </div>
-                            </a>
                             <a class="dropdown-item" href="/fas">
                                 <div class="c-avatar">
-                                    <img class="c-avatar-img" src="{{asset('images/cif-ir.svg')}}"> Farsi
+                                    <img class="c-avatar pr-1" src="{{asset('images/cif-ir.svg')}}"> Farsi
+                                </div>
+                            </a>
+                            <a class="dropdown-item" href="/en">
+                                <div class="c-avatar">
+                                    <img class="c-avatar ml-3 pr-1" src="{{asset('images/cif-us.svg')}}"> English
                                 </div>
                             </a>
                         </div>
@@ -76,7 +76,7 @@ if($user){
             </div>
         </a>
         <div class="dropdown-menu dropdown-menu-right pt-0">
-            <div class="dropdown-header bg-light py-2"><strong>Account</strong></div>
+            <div class="dropdown-header bg-light py-2"><strong>{{ __('translations.account') }}</strong></div>
             <a class="dropdown-item" href="{{ route('users.profile',['lang' => $locale,'username'=> $username]) }}">
                 <i class="c-icon mfe-2 cil-user"></i>{{ __('translations.profile') }} ({{  $username }})
             </a>

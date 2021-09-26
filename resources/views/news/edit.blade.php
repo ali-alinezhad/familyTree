@@ -15,7 +15,7 @@
                 {{ Form::open(['route'=>['news.update',$locale,$news->id], 'method' => 'put', 'enctype'=>"multipart/form-data"]) }}
                 <div>
                     <div class="form-group">
-                        <label for="subject">Title</label>
+                        <label for="subject">{{ __('translations.subject') }}</label>
                         <input type="text" name="title" class="form-control" id="title" value="{{ $news->title }}" dir="rtl" required>
                         @error('title')
                             <div class="alert alert-danger">{{ $message }}</div>
@@ -23,7 +23,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="description">Description</label>
+                        <label for="description"></label>
                         <textarea class="ckeditor form-control" name="description"
                                   id="my_ckeditor" required>{{ $news->description }}</textarea>
                         @error('description')
@@ -40,7 +40,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="status">Status</label>
+                        <label for="status">{{ __('translations.display_other') }}</label>
                         <input type="checkbox" name="status" id="status" @if($news->status) checked @endif>
                         @error('status')
                         <div class="alert alert-danger">{{ $message }}</div>
@@ -48,7 +48,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-primary mb-2">Upload</button>
+                    <button type="submit" class="btn btn-primary mb-2">{{ __('translations.upload') }}</button>
                 </div>
                 {{ Form::close() }}
             </div>

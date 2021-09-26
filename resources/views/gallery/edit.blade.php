@@ -10,7 +10,7 @@
                 {{ Form::open(['route'=>['gallery.update',$locale,$image->id], 'method' => 'put', 'enctype'=>"multipart/form-data"]) }}
                 <div>
                     <div class="form-group">
-                        <label for="subject">Title</label>
+                        <label for="subject">{{ __('translations.titles') }}</label>
                         <input type="text" name="title" class="form-control" id="title" value="{{ $image->title }}"
                               @if($locale === 'fas') dir="rtl" @endif>
                         @error('title')
@@ -19,7 +19,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="description">Description</label>
+                        <label for="description"></label>
                         <textarea class="ckeditor form-control" name="description"
                                   id="my_ckeditor">{{ $image->description }}</textarea>
                         @error('description')
@@ -36,7 +36,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="status">Status</label>
+                        <label for="status">{{ __('translations.display_other') }}</label>
                         <input type="checkbox" name="status" id="status" @if($image->status) checked @endif>
                         @error('status')
                         <div class="alert alert-danger">{{ $message }}</div>
@@ -44,7 +44,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-primary mb-2">Upload</button>
+                    <button type="submit" class="btn btn-primary mb-2">{{ __('translations.upload') }}</button>
                 </div>
                 {{ Form::close() }}
             </div>

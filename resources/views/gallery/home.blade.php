@@ -18,7 +18,7 @@
             @if($user->role < 2)
                 <div class="row pb-5">
                     <button class="btn btn-outline-primary" data-toggle="modal" data-target="#uploadImage">
-                        Upload new image <i class="cil-plus"></i>
+                       {{ __('translations.upload_image') }} <i class="cil-plus"></i>
                     </button>
                 </div>
                 <div id="uploadImage" class="modal fade" role="dialog">
@@ -34,7 +34,7 @@
                                 {{ Form::open(['route'=>['gallery.upload',$locale], 'method' => 'put','enctype'=>"multipart/form-data"]) }}
                                 <div>
                                     <div class="form-group">
-                                        <label for="subject">Title</label>
+                                        <label for="subject">{{ __('translations.titles') }}</label>
                                         <input type="text" name="title" class="form-control" id="title">
                                         @error('title')
                                         <div class="alert alert-danger">{{ $message }}</div>
@@ -42,7 +42,7 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="description">Description</label>
+                                        <label for="description"></label>
                                         <textarea class="ckeditor form-control" name="description"
                                                   id="my_ckeditor"></textarea>
                                         @error('description')
@@ -65,7 +65,7 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="status">Status</label>
+                                        <label for="status">{{ __('translations.display_other') }}</label>
                                         <input type="checkbox" name="status" id="status">
                                         @error('status')
                                         <div class="alert alert-danger">{{ $message }}</div>
@@ -73,12 +73,12 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <button type="submit" class="btn btn-primary mb-2">Upload</button>
+                                    <button type="submit" class="btn btn-primary mb-2">{{ __('translations.upload') }}</button>
                                 </div>
                                 {{ Form::close() }}
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">{{ __('translations.close') }}</button>
                             </div>
                         </div>
 
@@ -102,7 +102,7 @@
                                         $string    = $endPoint? substr($stringCut, 0, $endPoint) : substr($stringCut, 0);
                                         $string   .= "...";
                                     }
-                                    echo $string;
+                                    echo strlen($string) ? $string : '--';
                                 @endphp
                             </div>
                             <div class="p-4">

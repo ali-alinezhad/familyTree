@@ -7,8 +7,7 @@
                 <div class="card-body p-4">
                     <form method="post" action="{{ url('/register') }}">
                         @csrf
-                        <h1>Register</h1>
-                        <p class="text-muted">Create your account</p>
+                        <p class="text-muted">{{ __('translations.create_account') }}</p>
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">
@@ -56,8 +55,7 @@
                             <input type="password" name="password_confirmation" class="form-control"
                                    placeholder="Confirm password" required>
                         </div>
-                        <button type="submit" class="btn btn-primary btn-block btn-flat">Register</button>
-                        <a href="{{ route('login') }}" class="text-center">I already have a membership</a>
+                        <button type="submit" class="btn btn-primary btn-block btn-flat">{{ __('translations.register') }}</button>
                     </form>
                 </div>
             </div>
