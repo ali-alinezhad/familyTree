@@ -38,6 +38,16 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
+
+    public function showLoginForm()
+    {
+        return view('auth.login',[
+            'locale'   => session()->get('locale') ?? 'fas',
+            'homepage' => \App\Model\Homepage::first()
+        ]);
+    }
+
+
     public function username()
     {
         return 'username';

@@ -72,5 +72,6 @@ return [
     'about_us_description'  => 'About Us Description',
     'header_title'          => 'Header Title',
     'header_description'    => 'Header Description',
-    'upload_image'          => ' Upload new image',
+    'upload_image'          => 'Upload new image',
+    'sign_account'          => 'Sign In to your account',
 ];

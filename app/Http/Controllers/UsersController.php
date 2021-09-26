@@ -93,7 +93,7 @@ class UsersController extends Controller
         User    $user,
         Profile $profile,
         Request $request
-    )
+    ): RedirectResponse
     {
         $validator = Validator::make($request->all(), [
             'birthday'        => 'nullable|date',
@@ -119,25 +119,18 @@ class UsersController extends Controller
         ]);
 
         $fatherId = $request->get('father_name');
-        $error    = false;
 
         if ($fatherId) {
-            $children = Father::where('father_id',$user->id)->get();
+            $children = Father::where('father_id', $user->id)->get();
             foreach ($children as $child) {
-                if ($child->user_id === (int)$fatherId) {
-                    $error = true;
+                if ($child->user_id === (int) $fatherId) {
+                    $validator->after(function ($validator) {
+                        $validator->errors()->add('father_name', 'This is your Son!');
+                    });
                     break;
                 }
             }
         }
-
-
-        if ($error) {
-            $validator->after(function($validator) {
-                $validator->errors()->add('father_name', 'This is your Son!');
-            });
-        }
-
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator->errors());
@@ -171,7 +164,7 @@ class UsersController extends Controller
                 'titles'          => $request->get('titles'),
                 'telephone'       => $request->get('telephone'),
                 'email'           => $request->get('email'),
-                'picture'         => $image  ?? $profile->picture ?? null,
+                'picture'         => $image ?? $profile->picture ?? null,
                 'about_me'        => $request->get('about_me'),
                 'death_date'      => $request->get('death_date'),
                 'death_place'     => $request->get('death_place'),
@@ -229,6 +222,17 @@ class UsersController extends Controller
             'password'     => 'nullable|min:8|max:20|confirmed',
         ]);
 
+
+        if ($request->get('password')) {
+            $user->password = Hash::make($request->get('password'));
+            $checker        = $request->get('tooltip_check');
+            if ($checker === 'Weak' || $checker === 'Min 8 chars') {
+                $validator->after(function ($validator) {
+                    $validator->errors()->add('password', 'Password is not acceptable');
+                });
+            }
+        }
+
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator->errors());
         }
@@ -236,9 +240,6 @@ class UsersController extends Controller
         $user->english_name = $request->get('english_name');
         $user->persian_name = $request->get('persian_name');
 
-        if ($request->get('password')) {
-            $user->password = Hash::make($request->get('password'));
-        }
 
         $user->save();
 
@@ -301,7 +302,7 @@ class UsersController extends Controller
         $profile     = Profile::where('user_id', $user->id)->first();
 
         if ($profile) {
-            $father = User::where('id',$profile['father_name'])->first();
+            $father = User::where('id', $profile['father_name'])->first();
         }
 
         return view('users.details', [
