@@ -170,7 +170,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="marriage_data">{{ __('translations.marriage_data') }}</label>
+                    <label for="marriage_data">{{ __('translations.marriage_date') }}</label>
                     <input type="date" name="marriage_data" class="form-control" id="marriage_data"
                            value="@if($profile) {{ $profile['marriage_date'] }} @endif">
 

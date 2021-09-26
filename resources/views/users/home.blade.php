@@ -2,10 +2,6 @@
 
 @section('content')
     <div class="container-fluid">
-        <h1 class="text-black-50">{{ __('translations.users') }}</h1>
-    </div>
-
-    <div class="container-fluid">
         <div class="row pull-left" style="margin-bottom: 15px;">
 
         </div>

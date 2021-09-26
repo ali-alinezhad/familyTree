@@ -35,14 +35,25 @@
             </div>
             <nav id="mainav" class="fl_right">
                 <ul class="clear">
-                    <li class="active"><a href="/">Home</a></li>
-                    <li><a href="{{ route('index.gallery.show',['lang' => $locale]) }}">Gallery</a></li>
-                    <li><a href="{{ route('index.news.show',['lang' => $locale]) }}">News</a></li>
-                    <li><a href="{{ route('index.about_us',['lang' => $locale]) }}">About us</a></li>
-                    <li><a href="{{ route('login') }}">Login</a></li>
+                    <li>
+                        <a href="{{ route('login') }}">{{ __('translations.login') }}</a>
+                    </li>
+                    <li>
+                        <a href="{{ route('index.about_us',['lang' => $locale]) }}">{{ __('translations.about_us') }}</a>
+                    </li>
+                    <li>
+                        <a href="{{ route('index.gallery.show',['lang' => $locale]) }}">{{ __('translations.gallery') }}</a>
+                    </li>
+                    <li><a href="{{ route('index.news.show',['lang' => $locale]) }}">{{ __('translations.news') }}</a>
+                    </li>
+                    <li class="active">
+                        <a href="/">{{ __('translations.homepage') }}</a>
+                    </li>
                 </ul>
             </nav>
-            <audio class="text-center" src="{{ asset($homepage->music) }}" style=" width: 200px;" controls loop autoplay></audio>
+            <audio class="text-center" src="{{ asset($homepage->music) }}" style="height: 30px; width: 170px;"
+                   controls loop autoplay>
+            </audio>
         </header>
     </div>
 
@@ -59,11 +70,11 @@
 <div class="wrapper row5">
     <div id="copyright" class="hoc clear">
         <p class="fl_left">Copyright &copy; 2021- All Rights Reserved</p>
-        <p class="fl_right">Developed by
-            <a target="_blank" href="https://www.os-templates.com/" title="Free Website Templates">
-                Ali Alinezhad
-            </a>
-        </p>
+{{--        <p class="fl_right">Developed by--}}
+{{--            <a target="_blank" href="https://www.os-templates.com/" title="Free Website Templates">--}}
+{{--                Ali Alinezhad--}}
+{{--            </a>--}}
+{{--        </p>--}}
     </div>
 </div>
 <a id="backtotop" href="#top"><i class="fas fa-chevron-up"></i></a>

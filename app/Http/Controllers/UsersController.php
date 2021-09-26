@@ -56,6 +56,7 @@ class UsersController extends Controller
      */
     public function profileEdit(string $lang, string $username)
     {
+        $fathers     = [];
         $currentUser = $this->helper->getCurrentUser();
 
         $user = ($username !== session()->get('user') && $currentUser
@@ -118,15 +119,18 @@ class UsersController extends Controller
         ]);
 
         $fatherId = $request->get('father_name');
+        $error    = false;
 
-        $childs = Father::where('father_id',$user->id)->get();
-        $error = false;
-        foreach ($childs as $child) {
-            if ($child->user_id === (int)$fatherId) {
-                $error = true;
-                break;
+        if ($fatherId) {
+            $children = Father::where('father_id',$user->id)->get();
+            foreach ($children as $child) {
+                if ($child->user_id === (int)$fatherId) {
+                    $error = true;
+                    break;
+                }
             }
         }
+
 
         if ($error) {
             $validator->after(function($validator) {
@@ -175,10 +179,12 @@ class UsersController extends Controller
             ]
         );
 
-        Father::updateOrCreate(['user_id' => $user->id], [
-            'user_id'   => $user->id,
-            'father_id' => $fatherId,
-        ]);
+        if ($fatherId) {
+            Father::updateOrCreate(['user_id' => $user->id], [
+                'user_id'   => $user->id,
+                'father_id' => $fatherId,
+            ]);
+        }
 
         return redirect()->intended(route('users.profile', [$locale, $user->username]));
     }
@@ -448,9 +454,12 @@ class UsersController extends Controller
 
         while ($profile && $number < 5) {
             $number++;
-            $fatherName                             = User::where('id', $profile->father_name)->first();
-            $fatherLinks[$fatherName->persian_name] = route('users.details', [$locale, $profile->father_name]);
-            $profile                                = Profile::where('user_id', $profile->father_name)->first();
+            $fatherName = User::where('id', $profile->father_name)->first();
+            if ($fatherName) {
+                $fatherLinks[$fatherName->persian_name] = route('users.details', [$locale, $profile->father_name]);
+                $profile                                = Profile::where('user_id', $profile->father_name)->first();
+            }
+
         }
 
         return $fatherLinks;

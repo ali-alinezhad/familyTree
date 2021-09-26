@@ -2,6 +2,6 @@
 
 @section('content')
     <div class="container-fluid">
-        <h1 class="text-black-50">{{ __('translations.welcome') }}</h1>
+        <h4 class="text-black-50 text-center">{{ __('translations.welcome') }}</h4>
     </div>
 @endsection
