@@ -74,4 +74,5 @@ return [
     'header_title'          => 'عنوان بالای صفحه',
     'header_description'    => 'متن بالای صفحه',
     'upload_image'          => ' بارگذاری عکس جدید',
+    'sign_account'          => 'ورود به صفحه شخصی',
 ];

@@ -1,37 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-
-    <title>Login | {{ config('app.name') }}</title>
-    <meta name="description" content="CoreUI Template - InfyOm Laravel Generator">
-    <meta name="keyword" content="CoreUI,Bootstrap,Admin,Template,InfyOm,Open,Source,jQuery,CSS,HTML,RWD,Dashboard">
-
-    <!-- CoreUI CSS -->
-    <link rel="stylesheet" href="{{ mix('css/app.css') }}" crossorigin="anonymous">
-
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css"
-          integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog=="
-          crossorigin="anonymous"/>
-</head>
-
-<body class="c-app flex-row align-items-center">
+@extends('index.layout')
+@section('content')
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card-group">
                 <div class="card p-4">
-                    <div class="text-right">
-                        <a class="btn btn-lg btn-outline-light mt-3" href="{{ route('index.page') }}">Home page</a>
-                    </div>
                     <div class="card-body">
                         <form method="post" action="{{ url('/login') }}">
                             @csrf
-                            <h1>Login</h1>
-                            <p class="text-muted">Sign In to your account</p>
+                            <p class="text-muted">{{ __('translations.sign_account') }}</p>
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">
@@ -60,7 +37,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-4">
-                                    <button class="btn btn-primary px-4" type="submit">Login</button>
+                                    <button class="btn btn-primary px-4" type="submit">{{ __('translations.login') }}</button>
                                 </div>
                             </div>
                         </form>
@@ -71,9 +48,4 @@
         </div>
     </div>
 </div>
-
-<!-- CoreUI -->
-<script src="{{ mix('js/app.js') }}" defer></script>
-
-</body>
-</html>
+@endsection

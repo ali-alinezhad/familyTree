@@ -1,6 +1,8 @@
 @php $locale = session()->get('locale') ?? 'fas'; @endphp
 @extends('layouts.app')
-
+@section('third_party_stylesheets')
+    <link rel="stylesheet" href="{{ asset('css/styles/passtrength.css') }}">
+@endsection
 @section('content')
     <div class="container-fluid">
         {{ Form::open(['route'=>['users.info.update',$locale,$user->id], 'method' => 'put']) }}
@@ -24,6 +26,7 @@
             </div>
 
             <div class="form-group">
+                <input type="hidden" name="tooltip_check" id = "tooltip_check" value="">
                 <label for="password">{{ __('translations.password') }}</label>
                 <input type="password" name="password" class="form-control" id="password">
 
@@ -41,7 +44,7 @@
             </div>
         </div>
         <div class="form-group">
-            <button type="submit" class="btn btn-primary mb-2">{{ __('translations.submit') }}</button>
+            <button type="submit" class="btn btn-primary mb-2" id="submit_auth">{{ __('translations.submit') }}</button>
         </div>
         {{ Form::close() }}
     </div>
@@ -283,10 +286,33 @@
 
 @section('third_party_scripts')
     <script src="{{ asset('js/ckeditor/ckeditor.js') }}"></script>
+    <script src="{{asset('js/scripts/jquery.passtrength.js')}}"></script>
+
     <script type="text/javascript">
+
         $(document).ready(function () {
+            $('#submit_auth').hide();
             CKEDITOR.replace('my_ckeditor');
         });
+
+        $('#password').passtrength({
+            minChars: 7,
+            eyeImg: "{{ asset('/images/eye.svg') }}"
+        });
+
+        $('#password').keydown(function () {
+
+            if($(".tooltip").text() === 'Weak' || $(".tooltip").text() === 'Min 7 chars'){
+                $('#submit_auth').hide();
+            } else {
+                $('#submit_auth').show();
+            }
+        });
+
+        $('#submit_auth').click(function () {
+            $('#tooltip_check').attr('value', $(".tooltip").text());
+        })
+
 
         $(document).ready(function () {
             $("#accordion").accordion();
