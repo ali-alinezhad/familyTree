@@ -158,7 +158,7 @@ class UsersController extends Controller
                 'father_name'     => $fatherId,
                 'mother_name'     => $request->get('mother_name'),
                 'spouse_name'     => $request->get('spouse_name'),
-                'marriage_date'   => $request->get('marriage_date'),
+                'marriage_date'   => $request->get('marriage_data'),
                 'marriage_place'  => $request->get('marriage_place'),
                 'children_number' => $request->get('children_number'),
                 'titles'          => $request->get('titles'),
