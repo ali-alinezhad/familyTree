@@ -2,6 +2,12 @@
 @extends('layouts.app')
 @section('third_party_stylesheets')
     <link rel="stylesheet" href="{{ asset('css/styles/passtrength.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/styles/persianDatepicker.css') }}">
+    <style>
+        .pdp-header {
+            height: 30px !important;
+        }
+    </style>
 @endsection
 @section('content')
     <div class="container-fluid">
@@ -77,8 +83,9 @@
 
                 <div class="form-group">
                     <label for="birthday">{{ __('translations.birthday') }}</label>
-                    <input type="date" name="birthday" class="form-control" id="birthday"
+                    <input name="birthday" class="form-control" id="birthday"
                            value="@if($profile && $profile['birthday']){{ $profile['birthday']->format('Y-m-d') }}@endif">
+                    <span id="span1"></span>
                     @error('birthday')
                     <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
@@ -174,7 +181,7 @@
 
                 <div class="form-group">
                     <label for="marriage_data">{{ __('translations.marriage_date') }}</label>
-                    <input type="date" name="marriage_data" class="form-control" id="marriage_data"
+                    <input name="marriage_data" class="form-control" id="marriage_data"
                            value="@if($profile) {{ $profile['marriage_date'] }} @endif">
 
                     @error('marriage_data')
@@ -236,8 +243,8 @@
 
                 <div class="form-group">
                     <label for="death_date">{{ __('translations.death_date') }}</label>
-                    <input type="date" name="death_date" class="form-control" id="death_date"
-                           value="@if($profile && $profile['death_date']){{ $profile['death_date']->format('Y-m-d') }}@endif">
+                    <input name="death_date" class="form-control" id="death_date"
+                           value="@if($profile && $profile['death_date']){{ $profile['death_date'] }}@endif">
 
                     @error('death_date')
                     <div class="alert alert-danger">{{ $message }}</div>
@@ -285,14 +292,15 @@
 @endsection
 
 @section('third_party_scripts')
-    <script src="{{ asset('js/ckeditor/ckeditor.js') }}"></script>
-    <script src="{{asset('js/scripts/jquery.passtrength.js')}}"></script>
-
+    <script type="text/javascript" src="{{ asset('js/ckeditor/ckeditor.js') }}"></script>
+    <script type="text/javascript" src="{{asset('js/scripts/jquery.passtrength.js')}}"></script>
+    <script type="text/javascript" src="{{asset('js/scripts/persianDatepicker.js')}}"></script>
     <script type="text/javascript">
-
         $(document).ready(function () {
+            $("#accordion").accordion();
             $('#submit_auth').hide();
             CKEDITOR.replace('my_ckeditor');
+            $("#birthday,#marriage_data,#death_date").persianDatepicker();
         });
 
         $('#password').passtrength({
@@ -311,11 +319,6 @@
 
         $('#submit_auth').click(function () {
             $('#tooltip_check').attr('value', $(".tooltip").text());
-        })
-
-
-        $(document).ready(function () {
-            $("#accordion").accordion();
         })
 
         function readURL(input) {
