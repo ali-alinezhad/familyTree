@@ -284,7 +284,7 @@
                 </div>
             </div>
         </div>
-        <div class="pt-5">
+        <div class="p-3">
             <button type="submit" class="btn btn-primary mb-2">{{ __('translations.submit') }}</button>
         </div>
         {{ Form::close() }}

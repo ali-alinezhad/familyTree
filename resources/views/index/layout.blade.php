@@ -36,7 +36,25 @@
             <nav id="mainav" class="fl_right">
                 <ul class="clear">
                     <li>
-                        <a href="{{ route('login') }}">{{ __('translations.login') }}</a>
+                        <a class="drop" href="#">
+                            @switch(session()->get('locale'))
+                                @case('en')
+                                    <img class="c-avatar" src="{{asset('images/cif-us.svg')}}">
+                                @break
+                                @case('fas')
+                                    <img class="c-avatar" src="{{asset('images/cif-ir.svg')}}">
+                                @break
+                                @default
+                                    <img class="c-avatar" src="{{asset('images/cif-ir.svg')}}">
+                            @endswitch
+                        </a>
+                        <ul>
+                            <li><a href="/en"> <img class="c-avatar" src="{{asset('images/cif-us.svg')}}"></a></li>
+                            <li><a href="/fas"> <img class="c-avatar" src="{{asset('images/cif-ir.svg')}}"></a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="{{ route('index.login',['lang' => $locale]) }}">{{ __('translations.login') }}</a>
                     </li>
                     <li>
                         <a href="{{ route('index.about_us',['lang' => $locale]) }}">{{ __('translations.about_us') }}</a>

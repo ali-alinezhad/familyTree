@@ -32,7 +32,7 @@
     </div>
 
     <footer class="c-footer">
-        <div class="mfs-auto">Design By&nbsp;<a href="">Ali Alinezhad</a></div>
+        <div class="mfs-auto">Implement by&nbsp;Ali Alinezhad</div>
     </footer>
 </div>
 
