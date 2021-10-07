@@ -16,10 +16,6 @@ class LocalizationController extends Controller
      */
     public function index(string $locale,Request $request): RedirectResponse
     {
-        if(!$request->user()) {
-            return redirect()->intended(route('index.page'));
-        }
-        session()->put('user', $request->user()->username);
         App::setlocale($locale);
         session()->put('locale', $locale);
         return redirect()->back();

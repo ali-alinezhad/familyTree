@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware' => 'localization'], function () {
     Auth::routes();
     Route::get('/{lang}/home', 'LocalizationController@index')->name('locale');
-    Route::get('/home', 'HomeController@index')->name('home');
+   // Route::get('/home', 'HomeController@index')->name('home');
     Auth::routes();
     Route::get('/{lang}/home', 'HomeController@index')->name('home');
     Auth::routes();
