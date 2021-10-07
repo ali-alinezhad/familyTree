@@ -26,7 +26,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = RouteServiceProvider::HOME;
+  //  protected $redirectTo = '/fas'.RouteServiceProvider::HOME;
 
     /**
      * Create a new controller instance.
@@ -51,5 +51,16 @@ class LoginController extends Controller
     public function username()
     {
         return 'username';
+    }
+
+
+    public function redirectPath()
+    {
+        if (method_exists($this, 'redirectTo')) {
+            return $this->redirectTo();
+        }
+
+        $locale = session()->get('locale') ?? 'fas';
+        return property_exists($this, 'redirectTo') ? $this->redirectTo : "/$locale/home";
     }
 }
