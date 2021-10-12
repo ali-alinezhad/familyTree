@@ -3,6 +3,7 @@
 use App\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
 
@@ -36,7 +37,23 @@ class CreateUsersTable extends Migration
             ]
         );
 
+
         $user = User::find(1);
+        $user->role = 0;
+        $user->save();
+
+        User::firstOrCreate(
+            [
+                'english_name' => 'Admin',
+                'persian_name' => 'Admin',
+                'username'     => 'myAdmin',
+                'role'         => 0,
+                'password'     => Hash::make(12345678),
+            ]
+
+        );
+
+        $user = User::find(2);
         $user->role = 0;
         $user->save();
     }
