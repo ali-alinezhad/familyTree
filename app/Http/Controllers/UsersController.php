@@ -67,7 +67,7 @@ class UsersController extends Controller
 
         $profile = Profile::where('user_id', $user->id)->first();
 
-        foreach (User::all() as $userAsFather) {
+        foreach (User::where('username','<>','myAdmin') as $userAsFather) {
             if ($userAsFather->id !== $user->id) {
                 $fathers[] = $userAsFather;
             }
@@ -256,15 +256,16 @@ class UsersController extends Controller
      */
     public function destroy($locale, User $user): RedirectResponse
     {
-        $profile = Profile::where('user_id', $user->id)->first();
+        if ($user->id > 2) {
+            $profile = Profile::where('user_id', $user->id)->first();
 
-        if (file_exists($profile->picture)) {
-            unlink($profile->picture);
+            if (file_exists($profile->picture)) {
+                unlink($profile->picture);
+            }
+
+            $user->delete();
+            $profile->delete();
         }
-
-        $user->delete();
-        $profile->delete();
-
         return redirect()->intended(route('users', [$locale]));
     }
 
@@ -323,7 +324,7 @@ class UsersController extends Controller
     public function dataTablesData(Request $request)
     {
         $currentUser = $this->helper->getCurrentUser();
-        $users       = User::select();
+        $users       = User::where('username','<>','myAdmin');
         $totalData   = $users->count();
 
         $columns = [
@@ -413,9 +414,11 @@ class UsersController extends Controller
                             ]) . '" data-toggle="tooltip"
                            data-placement="top">
                             <i class="cil-pencil" title="Edit"></i>
-                        </a>
+                        </a>'.
 
-                         <a class="btn btn-xs btn-danger" style="float: left;" onclick="return confirm(\'Delete this record?\')"
+                            ($user->id > 2 ?
+
+                         '<a class="btn btn-xs btn-danger" style="float: left;" onclick="return confirm(\'Delete this record?\')"
                            href="' . route(
                                 'users.destroy',
                                 [session()->get('locale') ?? 'fas', $user->id]
@@ -423,7 +426,7 @@ class UsersController extends Controller
                             . '" data-toggle="tooltip"
                            data-placement="top">
                             <i class="cil-trash" title="Delete"></i>
-                        </a>' : null),
+                        </a>': null) : null),
                 ];
             }
         }

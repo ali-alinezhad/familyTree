@@ -51,7 +51,7 @@ class HomePageController extends Controller
             'about_us_title' => 'nullable|string',
             'about_us_des'   => 'nullable|string',
             'logo'           => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:8192',
-            'music'          => 'nullable|mimes:application/octet-stream,audio/mpeg,mpga,mp3,wav|max:4096',
+            'music'          => 'nullable|mimes:application/octet-stream,audio/mpeg,mpga,mp3,wav|max:8192',
         ]);
 
         if ($validator->fails()) {

@@ -74,4 +74,6 @@ return [
     'header_description'    => 'Header Description',
     'upload_image'          => 'Upload new image',
     'sign_account'          => 'Sign In to your account',
+    'doodman'               => 'Doodmane Bosh',
+    'cache'                 => 'Clear Cache',
 ];

@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{{ config('app.name') }}</title>
+    <title>{{ __('translations.doodman') }}</title>
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
 
     <!-- CoreUI CSS -->
-    <link rel="stylesheet" href="{{ mix('css/app.css') }}" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}" crossorigin="anonymous">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css"
           integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog=="
@@ -37,7 +37,7 @@
 </div>
 
 {{--<script src="{{ mix('js/app.js') }}" defer></script>--}}
-<script src="{{ mix('js/app.js') }}"></script>
+<script src="{{ asset('js/app.js') }}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.perfect-scrollbar/1.4.0/perfect-scrollbar.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 @yield('third_party_scripts')

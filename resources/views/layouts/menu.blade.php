@@ -48,7 +48,14 @@
 @if($user && $user->role < 2)
 <li class="c-sidebar-nav-item">
     <a class="c-sidebar-nav-link" href="{{ route('homepage.edit',['lang'=> $locale]) }}">
-        <i class="c-sidebar-nav-icon cil-puzzle"></i>{{ __('translations.homepage') }}
+        <i class="c-sidebar-nav-icon cil-screen-desktop"></i>{{ __('translations.homepage') }}
     </a>
 </li>
+@endif
+@if($user && $user->role < 1)
+    <li class="c-sidebar-nav-item">
+        <a class="c-sidebar-nav-link" href="{{ route('clear.cache',['lang'=> $locale]) }}">
+            <i class="c-sidebar-nav-icon cil-puzzle"></i>{{ __('translations.cache') }}
+        </a>
+    </li>
 @endif

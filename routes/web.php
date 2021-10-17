@@ -16,10 +16,15 @@ use Illuminate\Support\Facades\Route;
 //Route::get('/', function () {
 //    return view('welcome');
 //});
+//Route::get('/clear-cache', function() {
+//    Artisan::call('cache:clear');
+//    Artisan::call('config:cache');
+//    return "Cache is cleared";
+//});
 Route::group(['middleware' => 'localization'], function () {
     Auth::routes();
     Route::get('/{lang}/home', 'LocalizationController@index')->name('locale');
-   // Route::get('/home', 'HomeController@index')->name('home');
+   //Route::get('/home', 'HomeController@index')->name('home');
     Auth::routes();
     Route::get('/{lang}/home', 'HomeController@index')->name('home');
     Auth::routes();
@@ -39,6 +44,8 @@ Route::group(['middleware' => 'localization'], function () {
 
     Route::get('/{lang?}/index/login', 'Auth\LoginController@showLoginForm')->name('index.login');
 
+    //Clear cache
+    Route::get('/{lang}/clear-cache', 'LocalizationController@clearCache')->name('clear.cache');
 
     // Gallery
     Route::get('/{lang}/gallery', 'GalleryController@index')->name('gallery');

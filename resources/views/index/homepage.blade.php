@@ -37,7 +37,7 @@
         <hr class="btmspace-80">
         <!-- News -->
         <section class="group" id="news">
-            <div class="one_half first">
+            <div class="one_half first pt-5">
                 <img class="inspace-15 borderedbox" src="{{ asset($homepage->logo) }}" alt="{{ asset('images/logo/logo.jpg') }}">
             </div>
             <div class="one_half">
@@ -46,7 +46,7 @@
                     @foreach($newses as $key => $news)
                         <li class="one_half @if(!($key % 2)) first @endif @if($key < 2) btmspace-50 @endif">
                             <article>
-                                <h6 class="heading"><a href="#">
+                                <h6 class="heading"><a href="{{ route('index.news.details',[$locale,$news->id]) }}">
                                         @php
                                             $string = strip_tags($news->title);
                                             if (strlen($string) > 30) {
@@ -81,8 +81,22 @@
 </div>
 <div class="bgded overlay" id="about_us">
     <figure class="hoc container clear imgroup">
-        <p class="heading underline font-x2">{{ $homepage->about_us_title }}</p>
-        <p class="nospace font-xs">@php echo $homepage->about_us_des @endphp</p>
+        <div class="row" @if($locale === 'fas')dir="rtl"@endif>
+            <h3>
+                <div class="pb-3">
+                    {{ $homepage->about_us_title }}
+                </div>
+            </h3>
+        </div>
+        <div class="row" @if($locale === 'fas')dir="rtl"@endif>
+            <h3>
+                <small class="text-muted text-justify">
+                    @php
+                        echo $homepage->about_us_des;
+                    @endphp
+                </small>
+            </h3>
+        </div>
     </figure>
 </div>
 @endsection

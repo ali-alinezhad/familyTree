@@ -75,4 +75,6 @@ return [
     'header_description'    => 'متن بالای صفحه',
     'upload_image'          => ' بارگذاری عکس جدید',
     'sign_account'          => 'ورود به صفحه شخصی',
+    'doodman'               => 'دودمان بوش',
+    'cache'                 => 'پاکسازی حافظه',
 ];
