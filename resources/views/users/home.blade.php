@@ -11,6 +11,7 @@
             <tr>
                 <th>{{ __('translations.english_name') }}</th>
                 <th>{{ __('translations.persian_name') }}</th>
+                <th>{{ __('translations.username') }}</th>
                 <th>{{ __('translations.role') }}</th>
                 <th>{{ __('translations.status') }}</th>
                 <th>{{ __('translations.action') }}</th>
@@ -49,6 +50,7 @@
                 "columns": [
                     {"data": "english_name"},
                     {"data": "persian_name"},
+                    {"data": "username"},
                     {"data": "role"},
                     {"data": "status"},
                     {"data":"action","searchable":false,"orderable":false}

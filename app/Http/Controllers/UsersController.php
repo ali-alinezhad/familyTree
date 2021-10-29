@@ -371,6 +371,8 @@ class UsersController extends Controller
                 $data[] = [
                     'english_name' => $user->english_name,
                     'persian_name' => $user->persian_name,
+                    'username'     => ($currentUser->role < self::USER ||
+                        $currentUser->id === $user->id) ? $user->username : '--',
                     'status'       => $user->status,
                     'role'         => '<span class="text-'
                         . ($user->role === self::ADMIN ? 'danger' : ($user->role === self::ASSISTANT ? 'success' : 'info'))

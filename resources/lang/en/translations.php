@@ -76,4 +76,5 @@ return [
     'sign_account'          => 'Sign In to your account',
     'doodman'               => 'Doodmane Bosh',
     'cache'                 => 'Clear Cache',
+    'username'              => 'User Name',
 ];
