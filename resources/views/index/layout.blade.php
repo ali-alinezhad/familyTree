@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link href="{{ asset('css/styles/layout.css') }}" rel="stylesheet" type="text/css" media="all">
-    <link rel="stylesheet" href="{{ mix('css/app.css') }}" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}" crossorigin="anonymous">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css"
           integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog=="
@@ -39,13 +39,13 @@
                         <a class="drop" href="#">
                             @switch(session()->get('locale'))
                                 @case('en')
-                                    <img class="c-avatar" src="{{asset('images/cif-us.svg')}}">
+                                <img class="c-avatar" src="{{asset('images/cif-us.svg')}}">
                                 @break
                                 @case('fas')
-                                    <img class="c-avatar" src="{{asset('images/cif-ir.svg')}}">
+                                <img class="c-avatar" src="{{asset('images/cif-ir.svg')}}">
                                 @break
                                 @default
-                                    <img class="c-avatar" src="{{asset('images/cif-ir.svg')}}">
+                                <img class="c-avatar" src="{{asset('images/cif-ir.svg')}}">
                             @endswitch
                         </a>
                         <ul>
@@ -74,25 +74,59 @@
             </audio>
         </header>
     </div>
-
-    <div class="overlay">
-        <div id="pageintro" class="hoc clear">
-            <article>
-                <h3 class="heading"> {{ $homepage->header_title }}</h3>
-                <p> @php echo $homepage->header_des @endphp</p>
-            </article>
-        </div>
+    <div id="pageintro" class="hoc clear">
+        <article>
+            <h3 class="heading"> {{ $homepage->header_title }}</h3>
+            <p> @php echo $homepage->header_des @endphp</p>
+        </article>
+    </div>
+    <!-- Gallery -->
+    <div>
+        <div id="introblocks">
+        <ul class="nospace group">
+            @if(!empty($pictures) &&  !stristr($_SERVER['HTTP_USER_AGENT'],'mobi'))
+                @foreach($pictures as $key => $picture)
+                    <li class="one_third @if(!$key) first pl-5 @endif">
+                        <figure>
+                            <a href="{{ route('index.gallery.details',[$locale,$picture->id]) }}" class="imgover">
+                                <img src="{{ asset($picture->pic) }}"
+                                     alt="{{ asset('images/logo/logo.jpg') }}"
+                                     style="width:350px ;height: 170px;!important;">
+                            </a>
+                            <figcaption>
+                                <h6 class="heading">{{ $picture->title ?? '--' }}</h6>
+                                <div>
+                                    <p></p>
+                                </div>
+                            </figcaption>
+                        </figure>
+                    </li>
+                @endforeach
+{{--            @else--}}
+{{--                <li class="one_third first">--}}
+{{--                    <figure><img src="{{ asset('images/logo/logo.jpg') }}">--}}
+{{--                        <figcaption>--}}
+{{--                            <h6 class="heading"></h6>--}}
+{{--                            <div>--}}
+{{--                                <p></p>--}}
+{{--                            </div>--}}
+{{--                        </figcaption>--}}
+{{--                    </figure>--}}
+{{--                </li>--}}
+            @endif
+        </ul>
+    </div>
     </div>
 </div>
 @yield('content')
 <div class="wrapper row5">
     <div id="copyright" class="hoc clear">
         <p class="fl_left">Copyright &copy; 2021- All Rights Reserved</p>
-{{--        <p class="fl_right">Developed by--}}
-{{--            <a target="_blank" href="https://www.os-templates.com/" title="Free Website Templates">--}}
-{{--                Ali Alinezhad--}}
-{{--            </a>--}}
-{{--        </p>--}}
+        {{--        <p class="fl_right">Developed by--}}
+        {{--            <a target="_blank" href="https://www.os-templates.com/" title="Free Website Templates">--}}
+        {{--                Ali Alinezhad--}}
+        {{--            </a>--}}
+        {{--        </p>--}}
     </div>
 </div>
 <a id="backtotop" href="#top"><i class="fas fa-chevron-up"></i></a>
