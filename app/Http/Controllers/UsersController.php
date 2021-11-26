@@ -67,7 +67,7 @@ class UsersController extends Controller
 
         $profile = Profile::where('user_id', $user->id)->first();
 
-        foreach (User::where('username','<>','myAdmin') as $userAsFather) {
+        foreach (User::where('username','<>','myAdmin')->get() as $userAsFather) {
             if ($userAsFather->id !== $user->id) {
                 $fathers[] = $userAsFather;
             }
@@ -102,7 +102,7 @@ class UsersController extends Controller
             'education'       => 'nullable|string|max:40',
             'job_title'       => 'nullable|string|max:50',
             'job_place'       => 'nullable|string|max:40',
-            'father_name'     => 'nullable|integer|max:40',
+            'father_name'     => 'nullable|integer',
             'mother_name'     => 'nullable|string|max:40',
             'spouse_name'     => 'nullable|string|max:40',
             'marriage_date'   => 'nullable|date',
@@ -259,7 +259,7 @@ class UsersController extends Controller
         if ($user->id > 2) {
             $profile = Profile::where('user_id', $user->id)->first();
 
-            if (file_exists($profile->picture)) {
+            if ($profile && file_exists($profile->picture)) {
                 unlink($profile->picture);
             }
 
@@ -389,7 +389,7 @@ class UsersController extends Controller
                             [session()->get('locale') ?? 'fas', $user->id]
                         ) . '" data-toggle="tooltip"
                            data-placement="top">
-                            <i class="cil-user" title=Admin></i>
+                            <i class="cil-user" title="Details"></i>
                         </a>' .
 
                         ($currentUser->role === self::ADMIN || $currentUser->role === self::ASSISTANT ? '

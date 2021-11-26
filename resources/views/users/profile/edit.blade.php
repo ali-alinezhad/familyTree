@@ -298,7 +298,6 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $("#accordion").accordion();
-            $('#submit_auth').hide();
             CKEDITOR.replace('my_ckeditor');
             $("#birthday,#marriage_data,#death_date").persianDatepicker();
         });
@@ -316,6 +315,15 @@
                 $('#submit_auth').show();
             }
         });
+
+        $('#password_confirmation').keydown(function () {
+            if($('#password_confirmation').val() ===  $('#password').val()){
+                $('#submit_auth').show();
+            } else {
+                $('#submit_auth').hide();
+            }
+        });
+
 
         $('#submit_auth').click(function () {
             $('#tooltip_check').attr('value', $(".tooltip").text());
