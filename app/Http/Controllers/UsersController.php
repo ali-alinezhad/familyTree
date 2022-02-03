@@ -306,12 +306,21 @@ class UsersController extends Controller
             $father = User::where('id', $profile['father_name'])->first();
         }
 
+        $children = Father::where('father_id', $user->id)->get();
+
+        $kids = [];
+        foreach ($children as $child) {
+            $kidData = User::where('id',$child->user_id)->first();
+            $kids[] = $kidData->persian_name;
+        }
+
         return view('users.details', [
             'profile'     => $profile,
             'user'        => $user,
             'isSameUser'  => $currentUser->id === $user->id,
             'fatherLinks' => $this->getFatherLinks($locale, $user, $profile),
-            'fatherName'  => $father ? $father->persian_name : '--'
+            'fatherName'  => $father ? $father->persian_name : '--',
+            'kids'        => count($kids) ? implode(' - ',$kids) : '--'
         ]);
     }
 

@@ -1,9 +1,9 @@
 <?php
 
 return [
-    'homepage'              => 'صفحه اصلی',
-    'gallery'               => 'گالری عکس',
-    'news'                  => 'اخبار',
+    'homepage'              => 'پرده نخست',
+    'gallery'               => 'نگارخانه',
+    'news'                  => 'تازه ها',
     'tree'                  => 'شجر نامه',
     'welcome'               => 'به پنل شخصی خوش آمدید',
     'login'                 => 'ورود',
@@ -21,7 +21,7 @@ return [
     'spouse_name'           => 'نام همسر',
     'marriage_date'         => 'تاریخ ازدواج',
     'marriage_place'        => 'محل ازدواج',
-    'children_number'       => 'تعداد فرزندان',
+    'children'              => 'فرزندان',
     'submit'                => 'ثبت',
     'education'             => 'میزان تحصیلات',
     'job_title'             => 'شغل',

@@ -21,7 +21,7 @@ return [
     'spouse_name'           => 'Spouse Name',
     'marriage_date'         => 'Date of Marriage',
     'marriage_place'        => 'Place of Marriage',
-    'children_number'       => 'Number of Children',
+    'children'              => 'Children',
     'submit'                => 'Submit',
     'education'             => 'What is your education?',
     'job_title'             => 'What is your job?',
