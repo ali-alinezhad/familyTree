@@ -4,9 +4,9 @@ namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Gallery extends Model
+class Music extends Model
 {
-    protected $table = 'gallery';
+    protected $table = 'music';
 
     protected $fillable = [
         'user_id',

@@ -73,8 +73,11 @@ return [
     'header_title'          => 'Header Title',
     'header_description'    => 'Header Description',
     'upload_image'          => 'Upload new image',
+    'upload_document'       => 'Upload new document',
+    'upload_music'          => 'Upload music',
     'sign_account'          => 'Sign In to your account',
     'doodman'               => 'Doodmane Bosh',
     'cache'                 => 'Clear Cache',
     'username'              => 'User Name',
+    'document'              => 'Document',
 ];

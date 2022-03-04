@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 
+use App\Model\Document;
 use App\Model\Gallery;
+use App\Model\Homepage;
+use App\Model\Music;
 use App\Model\News;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Facades\DB;
@@ -23,7 +26,7 @@ class IndexController extends Controller
 
         return view('index.homepage', [
             'locale'   => $locale,
-            'homepage' => \App\Model\Homepage::first(),
+            'homepage' => Homepage::first(),
             'newses'   => $newses,
             'pictures' => $pictures,
         ]);
@@ -44,7 +47,7 @@ class IndexController extends Controller
 
         return view('index.news.home', [
             'locale'   => $locale,
-            'homepage' => \App\Model\Homepage::first(),
+            'homepage' => Homepage::first(),
             'news'     => $news,
         ]);
     }
@@ -60,7 +63,7 @@ class IndexController extends Controller
     {
         return view('index.news.details', [
             'locale'   => $locale,
-            'homepage' => \App\Model\Homepage::first(),
+            'homepage' => Homepage::first(),
             'news'     => $news,
         ]);
     }
@@ -80,7 +83,7 @@ class IndexController extends Controller
 
         return view('index.gallery.home', [
             'locale'   => $locale,
-            'homepage' => \App\Model\Homepage::first(),
+            'homepage' => Homepage::first(),
             'pictures' => $pictures,
         ]);
     }
@@ -96,8 +99,80 @@ class IndexController extends Controller
     {
         return view('index.gallery.details', [
             'locale'   => $locale,
-            'homepage' => \App\Model\Homepage::first(),
+            'homepage' => Homepage::first(),
             'picture'  => $gallery,
+        ]);
+    }
+
+
+    /**
+     * @param string $locale
+     *
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function ShowDocuments(string $locale = 'fas')
+    {
+        $documents = DB::table('documents')
+            ->orderBy('created_at', 'desc')
+            ->where('status', 1)
+            ->paginate(8);
+
+        return view('index.document.home', [
+            'locale'    => $locale,
+            'homepage'  => Homepage::first(),
+            'documents' => $documents,
+        ]);
+    }
+
+
+    /**
+     * @param string   $locale
+     * @param Document $document
+     *
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function ShowDocumentDetails(string $locale, Document $document)
+    {
+        return view('index.document.details', [
+            'locale'   => $locale,
+            'homepage' => Homepage::first(),
+            'document' => $document,
+        ]);
+    }
+
+
+    /**
+     * @param string $locale
+     *
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function ShowMusics(string $locale = 'fas')
+    {
+        $musics = DB::table('music')
+            ->orderBy('created_at', 'desc')
+            ->where('status', 1)
+            ->paginate(8);
+
+        return view('index.music.home', [
+            'locale'   => $locale,
+            'homepage' => Homepage::first(),
+            'musics'   => $musics,
+        ]);
+    }
+
+
+    /**
+     * @param string $locale
+     * @param Music  $music
+     *
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function ShowMusicDetails(string $locale, Music $music)
+    {
+        return view('index.music.details', [
+            'locale'   => $locale,
+            'homepage' => Homepage::first(),
+            'music'    => $music,
         ]);
     }
 
@@ -112,7 +187,7 @@ class IndexController extends Controller
     {
         return view('index.about_us.home', [
             'locale'   => $locale,
-            'homepage' => \App\Model\Homepage::first()
+            'homepage' => Homepage::first()
         ]);
     }
 }

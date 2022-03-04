@@ -62,7 +62,14 @@
                     <li>
                         <a href="{{ route('index.gallery.show',['lang' => $locale]) }}">{{ __('translations.gallery') }}</a>
                     </li>
-                    <li><a href="{{ route('index.news.show',['lang' => $locale]) }}">{{ __('translations.news') }}</a>
+                    <li>
+                        <a href="{{ route('index.document.show',['lang' => $locale]) }}">{{ __('translations.document') }}</a>
+                    </li>
+                    <li>
+                        <a href="{{ route('index.music.show',['lang' => $locale]) }}">{{ __('translations.music') }}</a>
+                    </li>
+                    <li>
+                        <a href="{{ route('index.news.show',['lang' => $locale]) }}">{{ __('translations.news') }}</a>
                     </li>
                     <li class="active">
                         <a href="/">{{ __('translations.homepage') }}</a>
@@ -83,39 +90,39 @@
     <!-- Gallery -->
     <div>
         <div id="introblocks">
-        <ul class="nospace group">
-            @if(!empty($pictures) &&  !stristr($_SERVER['HTTP_USER_AGENT'],'mobi'))
-                @foreach($pictures as $key => $picture)
-                    <li class="one_third @if(!$key) first pl-5 @endif">
-                        <figure>
-                            <a href="{{ route('index.gallery.details',[$locale,$picture->id]) }}" class="imgover">
-                                <img src="{{ asset($picture->pic) }}"
-                                     alt="{{ asset('images/logo/logo.jpg') }}"
-                                     style="width:350px ;height: 170px;!important;">
-                            </a>
-                            <figcaption>
-                                <h6 class="heading">{{ $picture->title ?? '--' }}</h6>
-                                <div>
-                                    <p></p>
-                                </div>
-                            </figcaption>
-                        </figure>
-                    </li>
-                @endforeach
-{{--            @else--}}
-{{--                <li class="one_third first">--}}
-{{--                    <figure><img src="{{ asset('images/logo/logo.jpg') }}">--}}
-{{--                        <figcaption>--}}
-{{--                            <h6 class="heading"></h6>--}}
-{{--                            <div>--}}
-{{--                                <p></p>--}}
-{{--                            </div>--}}
-{{--                        </figcaption>--}}
-{{--                    </figure>--}}
-{{--                </li>--}}
-            @endif
-        </ul>
-    </div>
+            <ul class="nospace group">
+                @if(!empty($pictures) &&  !stristr($_SERVER['HTTP_USER_AGENT'],'mobi'))
+                    @foreach($pictures as $key => $picture)
+                        <li class="one_third @if(!$key) first pl-5 @endif">
+                            <figure>
+                                <a href="{{ route('index.gallery.details',[$locale,$picture->id]) }}" class="imgover">
+                                    <img src="{{ asset($picture->pic) }}"
+                                         alt="{{ asset('images/logo/logo.jpg') }}"
+                                         style="width:350px ;height: 170px;!important;">
+                                </a>
+                                <figcaption>
+                                    <h6 class="heading">{{ $picture->title ?? '--' }}</h6>
+                                    <div>
+                                        <p></p>
+                                    </div>
+                                </figcaption>
+                            </figure>
+                        </li>
+                    @endforeach
+                    {{--            @else--}}
+                    {{--                <li class="one_third first">--}}
+                    {{--                    <figure><img src="{{ asset('images/logo/logo.jpg') }}">--}}
+                    {{--                        <figcaption>--}}
+                    {{--                            <h6 class="heading"></h6>--}}
+                    {{--                            <div>--}}
+                    {{--                                <p></p>--}}
+                    {{--                            </div>--}}
+                    {{--                        </figcaption>--}}
+                    {{--                    </figure>--}}
+                    {{--                </li>--}}
+                @endif
+            </ul>
+        </div>
     </div>
 </div>
 @yield('content')
