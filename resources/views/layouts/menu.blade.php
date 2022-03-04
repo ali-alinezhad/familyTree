@@ -34,12 +34,24 @@
     </ul>
 </li>
 
-
 <li class="c-sidebar-nav-item">
     <a class="c-sidebar-nav-link c-active" href="{{ route('gallery',['lang'=> $locale]) }}">
         <i class="c-sidebar-nav-icon cil-image1"></i>{{ __('translations.gallery') }}
     </a>
 </li>
+
+<li class="c-sidebar-nav-item">
+    <a class="c-sidebar-nav-link c-active" href="{{ route('document',['lang'=> $locale]) }}">
+        <i class="c-sidebar-nav-icon cil-notes"></i>{{ __('translations.document') }}
+    </a>
+</li>
+
+<li class="c-sidebar-nav-item">
+    <a class="c-sidebar-nav-link c-active" href="{{ route('music',['lang'=> $locale]) }}">
+        <i class="c-sidebar-nav-icon cil-music-note"></i>{{ __('translations.music') }}
+    </a>
+</li>
+
 <li class="c-sidebar-nav-item">
     <a class="c-sidebar-nav-link c-active" href="{{ route('news',['lang'=> $locale]) }}">
         <i class="c-sidebar-nav-icon cil-newspaper"></i>{{ __('translations.news') }}

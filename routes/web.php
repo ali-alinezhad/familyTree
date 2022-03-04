@@ -40,6 +40,10 @@ Route::group(['middleware' => 'localization'], function () {
     Route::get('/{lang}/index/news/{news}/details', 'IndexController@showNewsDetails')->name('index.news.details');
     Route::get('/{lang}/index/gallery', 'IndexController@ShowGallery')->name('index.gallery.show');
     Route::get('/{lang}/index/gallery/{gallery}/details', 'IndexController@ShowImageDetails')->name('index.gallery.details');
+    Route::get('/{lang}/index/document', 'IndexController@ShowDocuments')->name('index.document.show');
+    Route::get('/{lang}/index/document/{document}/details', 'IndexController@ShowDocumentDetails')->name('index.document.details');
+    Route::get('/{lang}/index/music', 'IndexController@ShowMusics')->name('index.music.show');
+    Route::get('/{lang}/index/music/{music}/details', 'IndexController@ShowMusicDetails')->name('index.music.details');
     Route::get('/{lang}/index/about_us', 'IndexController@showAboutUsWithDetails')->name('index.about_us');
 
     Route::get('/{lang?}/index/login', 'Auth\LoginController@showLoginForm')->name('index.login');
@@ -55,6 +59,21 @@ Route::group(['middleware' => 'localization'], function () {
     Route::get('/{lang}/gallery/{gallery}/delete', 'GalleryController@delete')->name('gallery.delete');
     Route::get('/{lang}/gallery/{gallery}/details', 'GalleryController@details')->name('gallery.details');
 
+    // Music
+    Route::get('/{lang}/music', 'MusicController@index')->name('music');
+    Route::put('/{lang}/music/upload', 'MusicController@upload')->name('music.upload');
+    Route::get('/{lang}/music/{music}/edit', 'MusicController@edit')->name('music.edit');
+    Route::put('/{lang}/music/{music}/update', 'MusicController@update')->name('music.update');
+    Route::get('/{lang}/music/{music}/delete', 'MusicController@delete')->name('music.delete');
+    Route::get('/{lang}/music/{music}/details', 'MusicController@details')->name('music.details');
+
+    // Document
+    Route::get('/{lang}/document', 'DocumentController@index')->name('document');
+    Route::put('/{lang}/document/upload', 'DocumentController@upload')->name('document.upload');
+    Route::get('/{lang}/document/{document}/edit', 'DocumentController@edit')->name('document.edit');
+    Route::put('/{lang}/document/{document}/update', 'DocumentController@update')->name('document.update');
+    Route::get('/{lang}/document/{document}/delete', 'DocumentController@delete')->name('document.delete');
+    Route::get('/{lang}/document/{document}/details', 'DocumentController@details')->name('document.details');
 
     // News
     Route::get('/{lang}/news', 'NewsController@index')->name('news');

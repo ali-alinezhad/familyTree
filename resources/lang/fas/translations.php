@@ -68,7 +68,7 @@ return [
     'send_private_message'  => 'ارسال پیام',
     'no_details'            => 'اطلاعاتی یافت نشد',
     'logo'                  => 'لوگو',
-    'music'                 => 'موزیک',
+    'music'                 => 'موسیقی',
     'about_us_title'        => 'عنوان بخش درباره ما',
     'about_us_description'  => 'متن بخش درباره ما',
     'header_title'          => 'عنوان بالای صفحه',
@@ -78,4 +78,7 @@ return [
     'doodman'               => 'دودمان بوش',
     'cache'                 => 'پاکسازی حافظه',
     'username'              => 'نام کاربری',
+    'upload_document'       => 'بارگذاری سند جدید',
+    'upload_music'          => 'بارگذاری موسیقی',
+    'document'              => 'نگارخانه اسناد',
 ];
