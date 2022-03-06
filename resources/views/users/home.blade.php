@@ -13,7 +13,7 @@
                 <th>{{ __('translations.persian_name') }}</th>
                 <th>{{ __('translations.username') }}</th>
                 <th>{{ __('translations.role') }}</th>
-                <th>{{ __('translations.status') }}</th>
+                <th>{{ __('translations.gender') }}</th>
                 <th>{{ __('translations.action') }}</th>
             </tr>
             </thead>

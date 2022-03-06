@@ -32,7 +32,22 @@
             </div>
 
             <div class="form-group">
-                <input type="hidden" name="tooltip_check" id = "tooltip_check" value="">
+                <label for="status">{{ __('translations.gender') }}</label>
+                <select name="status" class="form-control" id="status">
+                    <option value="1" @if($user && $user['status'] ==  1) selected @endif>
+                        {{ __('translations.man') }}
+                    </option>
+                    <option value="0" @if($user && $user['status'] ==  0) selected @endif>
+                        {{ __('translations.woman') }}
+                    </option>
+                </select>
+                @error('status')
+                <div class="alert alert-danger">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="form-group">
+                <input type="hidden" name="tooltip_check" id="tooltip_check" value="">
                 <label for="password">{{ __('translations.password') }}</label>
                 <input type="password" name="password" class="form-control" id="password">
 
@@ -77,6 +92,21 @@
                     @endif
 
                     @error('picture')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="form-group">
+                    <label for="status">{{ __('translations.relative') }}</label>
+                    <select name="status" class="form-control" id="status">
+                        <option value="1" @if($profile && $profile['status'] ==  1) selected @endif>
+                            {{ __('translations.cousin') }}
+                        </option>
+                        <option value="0" @if($profile && $profile['status'] ==  0) selected @endif>
+                            {{ __('translations.family') }}
+                        </option>
+                    </select>
+                    @error('status')
                     <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
                 </div>
@@ -143,12 +173,12 @@
             <h3>{{ __('translations.parent_information') }}</h3>
             <div>
                 <div class="form-group">
-
                     <label for="father_name">{{ __('translations.father_name') }}</label>
                     <select name="father_name" class="form-control" id="father_name">
                         <option></option>
                         @foreach($fathers as $father)
-                            <option value="{{ $father->id }}" @if($profile && $profile['father_name'] ===  $father->id) selected @endif>
+                            <option value="{{ $father->id }}"
+                                    @if($profile && $profile['father_name'] ===  $father->id) selected @endif>
                                 {{ $father->persian_name }}
                             </option>
                         @endforeach
@@ -161,8 +191,15 @@
 
                 <div class="form-group">
                     <label for="mother_name">{{ __('translations.mother_name') }}</label>
-                    <input type="text" name="mother_name" class="form-control" id="mother_name"
-                           value="@if($profile) {{ $profile['mother_name'] }} @endif">
+                    <select name="mother_name" class="form-control" id="mother_name">
+                        <option></option>
+                        @foreach($mothers as $mother)
+                            <option value="{{ $mother->id }}"
+                                    @if($profile && $profile['mother_name'] ==  $mother->id) selected @endif>
+                                {{ $mother->persian_name }}
+                            </option>
+                        @endforeach
+                    </select>
 
                     @error('mother_name')
                     <div class="alert alert-danger">{{ $message }}</div>
@@ -309,7 +346,7 @@
 
         $('#password').keydown(function () {
 
-            if($(".tooltip").text() === 'Weak' || $(".tooltip").text() === 'Min 7 chars'){
+            if ($(".tooltip").text() === 'Weak' || $(".tooltip").text() === 'Min 7 chars') {
                 $('#submit_auth').hide();
             } else {
                 $('#submit_auth').show();
@@ -317,7 +354,7 @@
         });
 
         $('#password_confirmation').keydown(function () {
-            if($('#password_confirmation').val() ===  $('#password').val()){
+            if ($('#password_confirmation').val() === $('#password').val()) {
                 $('#submit_auth').show();
             } else {
                 $('#submit_auth').hide();

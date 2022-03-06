@@ -30,6 +30,7 @@ class Profile extends Model
         'death_date',
         'death_place',
         'burial_place',
+        'status',
     ];
 
     protected $casts = [
