@@ -3,6 +3,7 @@
 @section('third_party_stylesheets')
     <link rel="stylesheet" href="{{ asset('css/styles/passtrength.css') }}">
     <link rel="stylesheet" href="{{ asset('css/styles/persianDatepicker.css') }}">
+    <link rel="stylesheet" href="{{ asset('select2/dist/css/select2.min.css') }}">
     <style>
         .pdp-header {
             height: 30px !important;
@@ -172,9 +173,10 @@
 
             <h3>{{ __('translations.parent_information') }}</h3>
             <div>
+
                 <div class="form-group">
                     <label for="father_name">{{ __('translations.father_name') }}</label>
-                    <select name="father_name" class="form-control" id="father_name">
+                <select name="father_name" class="form-control" id="father_name" style="width: 100% !important;">
                         <option></option>
                         @foreach($fathers as $father)
                             <option value="{{ $father->id }}"
@@ -191,7 +193,7 @@
 
                 <div class="form-group">
                     <label for="mother_name">{{ __('translations.mother_name') }}</label>
-                    <select name="mother_name" class="form-control" id="mother_name">
+                    <select name="mother_name" class="form-control" id="mother_name" style="width: 100% !important;">
                         <option></option>
                         @foreach($mothers as $mother)
                             <option value="{{ $mother->id }}"
@@ -332,11 +334,32 @@
     <script type="text/javascript" src="{{ asset('js/ckeditor/ckeditor.js') }}"></script>
     <script type="text/javascript" src="{{asset('js/scripts/jquery.passtrength.js')}}"></script>
     <script type="text/javascript" src="{{asset('js/scripts/persianDatepicker.js')}}"></script>
+    <script type="text/javascript" src="{{asset('select2/dist/js/select2.min.js')}}"></script>
     <script type="text/javascript">
         $(document).ready(function () {
             $("#accordion").accordion();
             CKEDITOR.replace('my_ckeditor');
             $("#birthday,#marriage_data,#death_date").persianDatepicker();
+
+            // Initialize select2
+            $("#father_name").select2();
+            // Read selected option
+            $('#but_read').click(function(){
+                var username = $('#father_name option:selected').text();
+                var userid = $('#father_name').val();
+                $('#result').html("id : " + userid + ", name : " + username);
+            });
+
+
+            // Initialize select2
+            $("#mother_name").select2();
+            // Read selected option
+            $('#but_read').click(function(){
+                var username = $('#mother_name option:selected').text();
+                var userid = $('#mother_name').val();
+                $('#result').html("id : " + userid + ", name : " + username);
+            });
+
         });
 
         $('#password').passtrength({

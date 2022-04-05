@@ -2,7 +2,7 @@
 
 return [
     'homepage'              => 'پرده نخست',
-    'gallery'               => 'نگارخانه',
+    'gallery'               => 'نگارخانه عکس',
     'news'                  => 'تازه ها',
     'tree'                  => 'شجر نامه',
     'welcome'               => 'به پنل شخصی خوش آمدید',
@@ -68,7 +68,7 @@ return [
     'send_private_message'  => 'ارسال پیام',
     'no_details'            => 'اطلاعاتی یافت نشد',
     'logo'                  => 'لوگو',
-    'music'                 => 'موسیقی',
+    'music'                 => 'آوا',
     'about_us_title'        => 'عنوان بخش درباره ما',
     'about_us_description'  => 'متن بخش درباره ما',
     'header_title'          => 'عنوان بالای صفحه',
