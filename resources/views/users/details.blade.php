@@ -279,7 +279,7 @@
                                         <h6 class="mb-0"> {{ __('translations.mother_name') }}</h6>
                                     </div>
                                     <div class="col-sm-9 text-secondary">
-                                        {{ $profile['mother_name'] ?? '--' }}
+                                        {{ $motherName }}
                                     </div>
                                 </div>
                                 <hr>
@@ -401,12 +401,14 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <button type="submit" class="btn btn-primary mb-2">{{ __('translations.send') }}</button>
+                                <button type="submit"
+                                        class="btn btn-primary mb-2">{{ __('translations.send') }}</button>
                             </div>
                             {{ Form::close() }}
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">{{ __('translations.close') }}</button>
+                            <button type="button" class="btn btn-default"
+                                    data-dismiss="modal">{{ __('translations.close') }}</button>
                         </div>
                     </div>
 
@@ -421,19 +423,50 @@
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                         </div>
                         <div class="modal-body">
-                            <div class="content-center">
-                                <div class="tree">
-                                    <ul>
-                                        <li>
-                                            @foreach(array_reverse($fatherLinks) as $name => $fatherLink)
-                                                <a href="{{ $fatherLink }}">{{ $name }}</a>
-                                                <ul>
-                                                    <li>
-                                                    </li>
-                                                </ul>
-                                            @endforeach
-                                        </li>
-                                    </ul>
+                            <div class="row">
+                                <div class="content-center col-md-6">
+                                    <div class="tree">
+                                        @if($fatherLinks)
+                                            {{ __('translations.father') }}
+                                        @endif
+                                        <ul>
+                                            <li>
+                                                @foreach(array_reverse($fatherLinks) as $name => $fatherLink)
+                                                    <a href="{{ $fatherLink['link'] }}"
+                                                       style="font-family: tahoma !important;
+                                                       @if($fatherLink['color']) background-color: #A5C261;" @endif">
+                                                    {{ $name }}
+                                                    </a>
+                                                    <ul>
+                                                        <li>
+                                                        </li>
+                                                    </ul>
+                                                @endforeach
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="content-center col-md-6">
+                                    <div class="tree">
+                                        @if(!empty($motherLinks))
+                                            {{ __('translations.mother') }}
+                                        @endif
+                                        <ul>
+                                            <li>
+                                                @foreach(array_reverse($motherLinks) as $name => $motherLink)
+                                                    <a href="{{ $motherLink['link'] }}"
+                                                       style="font-family: tahoma !important;
+                                                       @if($motherLink['color']) background-color: #A5C261;" @endif">
+                                                    {{ $name }}
+                                                    </a>
+                                                    <ul>
+                                                        <li>
+                                                        </li>
+                                                    </ul>
+                                                @endforeach
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>

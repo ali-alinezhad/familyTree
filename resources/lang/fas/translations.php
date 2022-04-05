@@ -2,7 +2,7 @@
 
 return [
     'homepage'              => 'پرده نخست',
-    'gallery'               => 'نگارخانه',
+    'gallery'               => 'نگارخانه عکس',
     'news'                  => 'تازه ها',
     'tree'                  => 'شجر نامه',
     'welcome'               => 'به پنل شخصی خوش آمدید',
@@ -68,7 +68,7 @@ return [
     'send_private_message'  => 'ارسال پیام',
     'no_details'            => 'اطلاعاتی یافت نشد',
     'logo'                  => 'لوگو',
-    'music'                 => 'موسیقی',
+    'music'                 => 'آوا',
     'about_us_title'        => 'عنوان بخش درباره ما',
     'about_us_description'  => 'متن بخش درباره ما',
     'header_title'          => 'عنوان بالای صفحه',
@@ -81,4 +81,15 @@ return [
     'upload_document'       => 'بارگذاری سند جدید',
     'upload_music'          => 'بارگذاری موسیقی',
     'document'              => 'نگارخانه اسناد',
+    'children_number'       => 'تعداد فرزندان',
+    'gender'                => 'جنسیت',
+    'man'                   => 'آقا',
+    'woman'                 => 'خانم',
+    'relative'              => 'نسبت فامیلی',
+    'cousin'                => 'نسبی',
+    'family'                => 'سببی',
+    'title_mr'              => 'آقای',
+    'title_mrs'             => 'خانم',
+    'father'                => 'پدری',
+    'mother'                => 'مادری',
 ];

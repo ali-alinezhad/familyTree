@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Helpers\Helper;
 use App\Model\Father;
+use App\Model\Mother;
 use App\Model\Profile;
 use App\User;
 use Illuminate\Http\RedirectResponse;
@@ -56,7 +57,7 @@ class UsersController extends Controller
      */
     public function profileEdit(string $lang, string $username)
     {
-        $fathers     = [];
+        $fathers     = $mothers = [];
         $currentUser = $this->helper->getCurrentUser();
 
         $user = ($username !== session()->get('user') && $currentUser
@@ -67,22 +68,29 @@ class UsersController extends Controller
 
         $profile = Profile::where('user_id', $user->id)->first();
 
-        foreach (User::where('username','<>','myAdmin')->get() as $userAsFather) {
+        foreach (User::where('username', '<>', 'myAdmin')->get() as $userAsFather) {
             if ($userAsFather->id !== $user->id) {
-                $fathers[] = $userAsFather;
+                if ($userAsFather->status > 0) {
+                    $fathers[] = $userAsFather;
+                }
+                else {
+                    $mothers[] = $userAsFather;
+                }
             }
         }
 
         return view('users.profile.edit', [
             'profile' => $profile,
             'user'    => $user,
-            'fathers' => $fathers
+            'fathers' => $fathers,
+            'mothers' => $mothers
         ]);
     }
 
 
     /**
      * @param string  $locale
+     * @param User    $user
      * @param Profile $profile
      * @param Request $request
      *
@@ -96,6 +104,7 @@ class UsersController extends Controller
     ): RedirectResponse
     {
         $validator = Validator::make($request->all(), [
+            'status'          => 'nullable|string',
             'birthday'        => 'nullable|date',
             'birthday_place'  => 'nullable|string|max:40',
             'residence_place' => 'nullable|string|max:430',
@@ -119,6 +128,7 @@ class UsersController extends Controller
         ]);
 
         $fatherId = $request->get('father_name');
+        $motherId = $request->get('mother_name');
 
         if ($fatherId) {
             $children = Father::where('father_id', $user->id)->get();
@@ -126,6 +136,18 @@ class UsersController extends Controller
                 if ($child->user_id === (int) $fatherId) {
                     $validator->after(function ($validator) {
                         $validator->errors()->add('father_name', 'This is your Son!');
+                    });
+                    break;
+                }
+            }
+        }
+
+        if ($motherId) {
+            $children = Mother::where('mother_id', $user->id)->get();
+            foreach ($children as $child) {
+                if ($child->user_id === (int) $motherId) {
+                    $validator->after(function ($validator) {
+                        $validator->errors()->add('mother_name', 'This is your Daughter!');
                     });
                     break;
                 }
@@ -149,6 +171,7 @@ class UsersController extends Controller
                 'user_id' => $user->id
             ],
             [
+                'status'          => (int) $request->get('status'),
                 'birthday'        => $request->get('birthday'),
                 'birthday_place'  => $request->get('birthday_place'),
                 'residence_place' => $request->get('residence_place'),
@@ -156,7 +179,7 @@ class UsersController extends Controller
                 'job_title'       => $request->get('job_title'),
                 'job_place'       => $request->get('job_place'),
                 'father_name'     => $fatherId,
-                'mother_name'     => $request->get('mother_name'),
+                'mother_name'     => $motherId,
                 'spouse_name'     => $request->get('spouse_name'),
                 'marriage_date'   => $request->get('marriage_data'),
                 'marriage_place'  => $request->get('marriage_place'),
@@ -176,6 +199,13 @@ class UsersController extends Controller
             Father::updateOrCreate(['user_id' => $user->id], [
                 'user_id'   => $user->id,
                 'father_id' => $fatherId,
+            ]);
+        }
+
+        if ($motherId) {
+            Mother::updateOrCreate(['user_id' => $user->id], [
+                'user_id'   => $user->id,
+                'mother_id' => $motherId,
             ]);
         }
 
@@ -220,6 +250,7 @@ class UsersController extends Controller
             'english_name' => 'required|string|max:70',
             'persian_name' => 'required|string|max:70',
             'password'     => 'nullable|min:8|max:20|confirmed',
+            'status'       => 'required|string',
         ]);
 
 
@@ -239,6 +270,7 @@ class UsersController extends Controller
 
         $user->english_name = $request->get('english_name');
         $user->persian_name = $request->get('persian_name');
+        $user->status       = (int) $request->get('status');
 
 
         $user->save();
@@ -299,19 +331,21 @@ class UsersController extends Controller
     public function showDetails($locale, User $user)
     {
         $father      = null;
+        $mother      = null;
         $currentUser = $this->helper->getCurrentUser();
         $profile     = Profile::where('user_id', $user->id)->first();
 
         if ($profile) {
             $father = User::where('id', $profile['father_name'])->first();
+            $mother = User::where('id', $profile['mother_name'])->first();
         }
 
         $children = Father::where('father_id', $user->id)->get();
 
         $kids = [];
         foreach ($children as $child) {
-            $kidData = User::where('id',$child->user_id)->first();
-            $kids[] = $kidData->persian_name;
+            $kidData = User::where('id', $child->user_id)->first();
+            $kids[]  = $kidData->persian_name;
         }
 
         return view('users.details', [
@@ -319,8 +353,10 @@ class UsersController extends Controller
             'user'        => $user,
             'isSameUser'  => $currentUser->id === $user->id,
             'fatherLinks' => $this->getFatherLinks($locale, $user, $profile),
+            'motherLinks' => $this->getMotherLinks($locale, $user, $profile),
             'fatherName'  => $father ? $father->persian_name : '--',
-            'kids'        => count($kids) ? implode(' - ',$kids) : '--'
+            'motherName'  => $mother ? $mother->persian_name : '--',
+            'kids'        => count($kids) ? implode(' - ', $kids) : '--'
         ]);
     }
 
@@ -333,7 +369,7 @@ class UsersController extends Controller
     public function dataTablesData(Request $request)
     {
         $currentUser = $this->helper->getCurrentUser();
-        $users       = User::where('username','<>','myAdmin');
+        $users       = User::where('username', '<>', 'myAdmin');
         $totalData   = $users->count();
 
         $columns = [
@@ -380,9 +416,9 @@ class UsersController extends Controller
                 $data[] = [
                     'english_name' => $user->english_name,
                     'persian_name' => $user->persian_name,
-                    'username'     => ($currentUser->role < self::USER ||
-                        $currentUser->id === $user->id) ? $user->username : '--',
-                    'status'       => $user->status,
+                    'username'     => ($currentUser->role < self::USER || $currentUser->id === $user->id) ? $user->username
+                        : '--',
+                    'status'       => $user->status ? trans('translations.man') : trans('translations.woman'),
                     'role'         => '<span class="text-'
                         . ($user->role === self::ADMIN ? 'danger' : ($user->role === self::ASSISTANT ? 'success' : 'info'))
                         . '" data-id="' . $user->id . '">
@@ -425,19 +461,19 @@ class UsersController extends Controller
                             ]) . '" data-toggle="tooltip"
                            data-placement="top">
                             <i class="cil-pencil" title="Edit"></i>
-                        </a>'.
+                        </a>' .
 
                             ($user->id > 2 ?
 
-                         '<a class="btn btn-xs btn-danger" style="float: left;" onclick="return confirm(\'Delete this record?\')"
+                                '<a class="btn btn-xs btn-danger" style="float: left;" onclick="return confirm(\'Delete this record?\')"
                            href="' . route(
-                                'users.destroy',
-                                [session()->get('locale') ?? 'fas', $user->id]
-                            )
-                            . '" data-toggle="tooltip"
+                                    'users.destroy',
+                                    [session()->get('locale') ?? 'fas', $user->id]
+                                )
+                                . '" data-toggle="tooltip"
                            data-placement="top">
                             <i class="cil-trash" title="Delete"></i>
-                        </a>': null) : null),
+                        </a>' : null) : null),
                 ];
             }
         }
@@ -464,19 +500,91 @@ class UsersController extends Controller
     {
         $fatherLinks = [];
         $number      = 0;
+        $title       = $user->status ? trans('translations.title_mr') : trans('translations.title_mrs');
 
-        $fatherLinks[$user->persian_name] = route('users.details', [$locale, $user->id]);
+        if (empty($profile)) {
+            return [];
+        }
+
+        $fatherLinks[$title . ' ' . $user->persian_name] = [
+            'link'  => route('users.details', [$locale, $user->id]),
+            'color' => $profile->status
+        ];
 
         while ($profile && $number < 5) {
             $number++;
             $fatherName = User::where('id', $profile->father_name)->first();
             if ($fatherName) {
-                $fatherLinks[$fatherName->persian_name] = route('users.details', [$locale, $profile->father_name]);
-                $profile                                = Profile::where('user_id', $profile->father_name)->first();
-            }
+                $title   = $fatherName->status ? trans('translations.title_mr') : trans('translations.title_mrs');
+                $profile = Profile::where('user_id', $fatherName->id)->first();
 
+                $fatherLinks[$title . ' ' . $fatherName->persian_name] = [
+                    'link'  => route('users.details', [$locale, $fatherName->id]),
+                    'color' => $profile ? $profile->status : ''
+                ];
+            }
         }
 
         return $fatherLinks;
+    }
+
+
+    /**
+     * @param              $locale
+     * @param User         $user
+     * @param Profile|null $profile
+     *
+     * @return array
+     */
+    private function getMotherLinks($locale, User $user, ?Profile $profile): array
+    {
+        $motherLinks = [];
+        $number      = 0;
+        $title       = $user->status ? trans('translations.title_mr') : trans('translations.title_mrs');
+
+        if (empty($profile)) {
+            return [];
+        }
+
+        $motherLinks[$title . ' ' . $user->persian_name] = [
+            'link'  => route('users.details', [$locale, $user->id]),
+            'color' => (int) $profile->status
+        ];
+
+        $motherName = User::where('id', $profile->mother_name)->first();
+        if (empty($motherName)) {
+            return [];
+        }
+
+        if ($motherName) {
+            $title = $motherName->status ? trans('translations.title_mr') : trans('translations.title_mrs');
+
+            $profile = Profile::where('user_id', $profile->mother_name)->first();
+
+            $motherLinks[$title . ' ' . $motherName->persian_name] = [
+                'link'  => route('users.details', [$locale, $profile->user_id]),
+                'color' => (int) $profile->status
+            ];
+
+
+        }
+
+        while ($profile && $number < 5) {
+            $number++;
+            $fatherName = User::where('id', $profile->father_name)->first();
+            if ($fatherName) {
+                $title = $fatherName->status ? trans('translations.title_mr') : trans('translations.title_mrs');
+
+                $motherLinks[$title . ' ' . $fatherName->persian_name] = [
+                    'link'  => route('users.details', [$locale, $profile->father_name]),
+                    'color' => (int) $profile->status
+                ];
+
+                $profile = Profile::where('user_id', $profile->father_name)->first();
+            }
+        }
+
+
+        return $motherLinks;
     }
 }
