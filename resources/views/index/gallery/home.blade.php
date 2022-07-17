@@ -3,7 +3,7 @@
     <div class="wrapper row3">
         <main class="hoc container clear">
             <div class="row">
-                @foreach($pictures as $picture)
+                @foreach($images as $picture)
                     <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
                         <a href="{{ route('index.gallery.details',[$locale,$picture->id]) }}">
                             <div class="bg-white rounded shadow-sm">
@@ -30,7 +30,7 @@
                     </div>
                 @endforeach
             </div>
-            <div class="py-5 text-right"> {{ $pictures->onEachSide(5)->links() }}</div>
+            <div class="py-5 text-right"> {{ $images->onEachSide(5)->links() }}</div>
         </main>
     </div>
 @endsection

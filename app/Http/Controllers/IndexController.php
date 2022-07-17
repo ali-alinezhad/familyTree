@@ -76,15 +76,18 @@ class IndexController extends Controller
      */
     public function ShowGallery(string $locale = 'fas')
     {
-        $pictures = DB::table('gallery')
+        $images = DB::table('gallery')
             ->orderBy('created_at', 'desc')
             ->where('status', 1)
             ->paginate(8);
 
+        $pictures = Gallery::orderBy('created_at', 'desc')->where('status', 1)->take(3)->get();
+
         return view('index.gallery.home', [
             'locale'   => $locale,
             'homepage' => Homepage::first(),
-            'pictures' => $pictures,
+            'images'   => $images,
+            'pictures' =>  $pictures
         ]);
     }
 
